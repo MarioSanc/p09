@@ -1,0 +1,25 @@
+{
+  "name": "p09",
+  "version": "1.0.0",
+  "description": "Práctica de la asignatura Aplicaciones Web 2018/19.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarioSanc/p09.git"
+  },
+  "author": "Alejandro Salgado y Mario Sánchez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarioSanc/p09/issues"
+  },
+  "homepage": "https://github.com/MarioSanc/p09#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0"
+  }
+}
