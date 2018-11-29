@@ -12,42 +12,22 @@
 
 <body>
     <%- include('./header'); %>
-    <div id="encabezado">
-        <div id="logo"></div>
-        <h1>
-            Gestor de tareas
-        </h1>
-        <div id="containerUsuario">
-            <div id="inter">
-
-                <!--
-                    <img src="/imagenUsuario" height="100" width="100">
-                -->
-
-            </div>
-            <div id="datosUsuario">
-
-               
-
-            </div>
-        </div>
-    </div>
-
+    
     <div id="containerGeneral">
         
-            <form action="/login" method="POST" class="panelLogin">
-                <div class = "mail">
-                    <p class="nombreCamposLogin"> Correo:</p> 
-                   <input type="text" value="usuario@ucm.es" name="correo" class="textoLogin"><br>
-                </div>
-                <div class = "clave">
-                    <p class="nombreCamposLogin"> Contraseña:</p> 
-                    <input type="text" name="password" value="" class = "textoLogin"><br>
-                </div>
-                <% if(mensaje){%> <p class="flash"> <%= mensaje %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
-                <input type="submit" value="Aceptar" class="button botonLogin">
+        <form action="/login" method="POST" class="panelLogin">
+             <div class = "mail">
+                 <p class="nombreCamposLogin"> Correo:</p> 
+                 <input type="text" value="usuario@ucm.es" name="correo" class="textoLogin"><br>
+            </div>
+             <div class = "clave">
+                <p class="nombreCamposLogin"> Contraseña:</p> 
+                 <input type="text" name="password" value="" class = "textoLogin"><br>
+            </div>
+            <% if(mensaje){%> <p class="flash"> <%= mensaje %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
+            <input type="submit" value="Aceptar" class="button botonLogin">
 
-            </form>
+         </form>
         
     </div>
 
