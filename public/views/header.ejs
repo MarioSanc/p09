@@ -1,0 +1,23 @@
+<div id= "cabecera ">
+
+    <div id="FaceBLUFF">
+        <h1>FaceBluff</h1>
+    </div>
+
+    <nav>
+        <div class="container-fluid">
+            <ul>
+                <% if(registrado){ %>
+                    <li><a class="" href="/my_profile">Perfil</a></li>
+                    <li><a class="" href="/friends">Amigos</a></li>
+                    <li><a class="" href="/questions">Preguntas</a></li>
+                    <li><a class="" href="/desconectar">Desconectar</a></li>
+                    <!--<li><a class="" href="/solicitudesAdoptante">Puntos</a></li> PUNTOS NO ES UN ENLACE-->
+                <% }else {%>
+                    <li><a class="" href="/login">Entrar</a></li>
+                    <li><a class="" href="/new_user">Nuevo Usuario</a></li> 
+                 <% } %>
+            </ul>
+        </div>
+    </nav>
+</div>
