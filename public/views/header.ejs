@@ -1,13 +1,14 @@
-<div id= "cabecera ">
+<link rel="stylesheet" type="text/css" href="css/header.css" media="screen">
+<div id= "cabecera">
 
     <div id="FaceBLUFF">
         <h1>FaceBluff</h1>
     </div>
 
     <nav>
-        <div class="container-fluid">
-            <ul>
-                <% if(registrado){ %>
+        <div class="navbar">
+            <ul class = "navbarList">
+                <% if(mensaje){ %>
                     <li><a class="" href="/my_profile">Perfil</a></li>
                     <li><a class="" href="/friends">Amigos</a></li>
                     <li><a class="" href="/questions">Preguntas</a></li>
@@ -15,7 +16,7 @@
                     <!--<li><a class="" href="/solicitudesAdoptante">Puntos</a></li> PUNTOS NO ES UN ENLACE-->
                 <% }else {%>
                     <li><a class="" href="/login">Entrar</a></li>
-                    <li><a class="" href="/new_user">Nuevo Usuario</a></li> 
+                    <li><a class="" href="/registro">Nuevo Usuario</a></li> 
                  <% } %>
             </ul>
         </div>

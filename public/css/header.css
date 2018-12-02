@@ -1,28 +1,30 @@
 *{
 	margin: 0px;
 	padding: 0px;
-	border: solid;
 }
-
-#Cabecera{
+body{
+	background-image: url("../img/fondo3.jpg");
+}
+#FaceBLUFF{
 	width: 100%;
 	height: 200px;
 	text-align: center;
-	background-image: url(morado.jpg);
-
+	background-image: url("../img/morado.jpg");
+	font-family: 'Mali', cursive;
 
 }
-
+.navbar{
+	background-color:black;
+	height: 40px;
+}
+.navbarList{
+	display: flex;
+	flex-direction: row;
+	padding-left: 5%;
+	list-style: none;
+	
+}
 #ContainerGeneral{
 	background-image: url(fondo3.jpg);
 	height: auto;
-}
-
-#BarraDeEnlaces a{
-	display: inline-block;
-
-}
-
-#FaceBLUFF{
-	font-family: 'Mali', cursive;
 }

@@ -1,0 +1,15 @@
+
+.panelLogin{
+    margin-top: 100px;
+    display:flex;
+	flex-direction: column;
+	align-self: center;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url("../img/morado.jpg");
+	height: 300px;
+	width: 30%;
+	border: black solid;
+	border-radius: 10px;
+	min-width: 350px;
+}

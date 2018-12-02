@@ -4,10 +4,17 @@ const mysql = require("mysql");
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+const morgan = require("morgan"); 
+
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
-const morgan = require("morgan"); 
-const sessionStore = new MySQLStore(config.mysqlConfig);
+const MySQLStore = mysqlSession(session);
+const sessionStore = new MySQLStore({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "facebluff" 
+});
 
 // Crear un servidor Express.js
 const app = express();
@@ -30,15 +37,6 @@ app.use(express.static(ficherosEstaticos));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-function middleware_acceso(request, response, next) {
-    if (request.session.currentUser != undefined) {
-        response.locals.userEmail = request.session.currentUser;
-        next();  // Saltar al siguiente middleware
-    } else {
-        response.redirect("/login");
-    }
-}
-
 // Arrancar el servidor
 app.listen(config.port, function (err) {
     if (err) {
@@ -51,7 +49,7 @@ app.listen(config.port, function (err) {
 });
 
 app.get("/", function(request, response) {
-    response.redirect("/login.html");
+    response.redirect("/login");
     });
 
     
@@ -60,7 +58,7 @@ app.get("/login", function (request, response) {
     response.render("login",{mensaje:null});
 });
 
-app.post("/login", function (request, response) {
+/*app.post("/login", function (request, response) {
     response.statusCode = 200;
     daoU.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result) {
         if (err) {
@@ -70,13 +68,10 @@ app.post("/login", function (request, response) {
         } else if (result) {
             console.log("Usuario y contraseña correctos");
             request.session.currentUser = request.body.correo;
-            response.redirect("/tasks");
+            response.redirect("/perfil");
         } else {
             console.log("Usuario y/o contraseña incorrectos");
             response.render("login",{mensaje: "Dirección de correo y/o contraseña no válidos."});
         }
     });
-
-    //console.log("post login " +request.body.correo);
-    //console.log(request.session.currentUser);
-});
+});*/
