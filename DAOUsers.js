@@ -47,7 +47,7 @@ class DAOUsers {
                 callback(err_);
             }
             else {
-                connecction.query("select img from usuario where email = ?",
+                connecction.query("select imagen from usuario where email = ?",
                     [email], function (err, resultado) {
                         connecction.release();
                         if (err) {

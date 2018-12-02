@@ -6,6 +6,10 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const morgan = require("morgan"); 
 
+//daos
+const DAOUsers = require("./DAOUsers");
+
+//Session
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
 const MySQLStore = mysqlSession(session);
@@ -16,10 +20,13 @@ const sessionStore = new MySQLStore({
     database: "facebluff" 
 });
 
-// Crear un servidor Express.js
-const app = express();
 // Crear un pool de conexiones a la base de datos de MySQL
 const pool = mysql.createPool(config.mysqlConfig);
+
+//DAOS
+const daoUsuarios = new DAOUsers(pool);
+// Crear un servidor Express.js
+const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public", "views"));
@@ -58,9 +65,9 @@ app.get("/login", function (request, response) {
     response.render("login",{mensaje:null});
 });
 
-/*app.post("/login", function (request, response) {
+app.post("/login", function (request, response) {
     response.statusCode = 200;
-    daoU.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result) {
+    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result) {
         if (err) {
             response.status(500);
             console.log(err.message);
@@ -74,4 +81,4 @@ app.get("/login", function (request, response) {
             response.render("login",{mensaje: "Dirección de correo y/o contraseña no válidos."});
         }
     });
-});*/
+});

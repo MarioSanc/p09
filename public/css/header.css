@@ -4,27 +4,42 @@
 }
 body{
 	background-image: url("../img/fondo3.jpg");
+
 }
-#FaceBLUFF{
+#contenedorTitulo{
 	width: 100%;
 	height: 200px;
 	text-align: center;
 	background-image: url("../img/morado.jpg");
+}
+.titulo{
+	padding-top: 30px;
 	font-family: 'Mali', cursive;
-
+	font-size: 90px;
+	color:white;
 }
 .navbar{
 	background-color:black;
 	height: 40px;
+	padding-top: 10px;	
 }
+
 .navbarList{
 	display: flex;
 	flex-direction: row;
-	padding-left: 5%;
 	list-style: none;
-	
+	justify-content: space-evenly;
+
 }
-#ContainerGeneral{
-	background-image: url(fondo3.jpg);
-	height: auto;
+
+.navLink{
+	color:white;
+	text-decoration: none;
+	margin-left: 20px;
+	font-size: 20px;
+	font-family: 'Mali', cursive;
+}
+
+.navLink:hover{
+	color:grey;
 }
