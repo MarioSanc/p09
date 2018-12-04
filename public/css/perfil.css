@@ -1,0 +1,44 @@
+.tituloPerfil{
+	margin-top: 30px;
+	text-align: center;
+}
+.panelPerfil{
+    margin-top: 50px;
+    display:flex;
+	flex-direction: column;
+	align-self: center;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url("../img/morado.jpg");
+	min-height: 400px;
+	width: 40%;
+	border: black solid;
+	border-radius: 10px;
+    min-width: 500px;
+    justify-content: space-between;
+}
+.imagenDatos{
+    margin: 50px;
+    display:flex;
+    flex-direction: row;
+}
+.datos{
+    margin-left: 20px;
+    font-size: 20px;
+}
+.botonModif {
+	width:200px;
+	height: 50px;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	cursor: pointer;
+	font-family: 'Mali', cursive;
+	font-size: 20px;
+    background-color: white;
+    margin-bottom: 40px;
+}
+.botonModif:hover{
+	background-color: grey;
+}
+

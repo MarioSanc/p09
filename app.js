@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
-const morgan = require("morgan"); 
+const morgan = require("morgan");
 
 //daos
 const DAOUsers = require("./DAOUsers");
@@ -17,7 +17,7 @@ const sessionStore = new MySQLStore({
     host: "localhost",
     user: "root",
     password: "",
-    database: "facebluff" 
+    database: "facebluff"
 });
 
 // Crear un pool de conexiones a la base de datos de MySQL
@@ -55,14 +55,14 @@ app.listen(config.port, function (err) {
     }
 });
 
-app.get("/", function(request, response) {
+app.get("/", function (request, response) {
     response.redirect("/login");
-    });
+});
 
-    
+
 app.get("/login", function (request, response) {
     response.statusCode = 200;
-    response.render("login",{mensaje:null});
+    response.render("login", { mensaje: null });
 });
 
 app.post("/login", function (request, response) {
@@ -78,7 +78,29 @@ app.post("/login", function (request, response) {
             response.redirect("/perfil");
         } else {
             console.log("Usuario y/o contraseña incorrectos");
-            response.render("login",{mensaje: "Dirección de correo y/o contraseña no válidos."});
+            response.render("login", { mensaje: "Dirección de correo y/o contraseña no válidos." });
         }
     });
 });
+
+app.get("/perfil", function (request, response) {
+    daoUsuarios.getUser(request.session.currentUser, (err, result) => {
+        if (err) {
+            response.status(500);
+            console.log(err.message);
+            response.end(err.message);
+        }
+        else {
+            
+            response.render("perfil", { usuario: result });//Hay que pasar la imagen también.
+        }
+    });
+});
+
+app.get("/desconectar", (request, response) => {
+    response.status(300);
+    request.session.destroy();
+    response.redirect("/login");
+    response.end();
+});
+

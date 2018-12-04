@@ -3,26 +3,42 @@
 
 <head>
 
-    <link rel="stylesheet" type="text/css" href="css/p1.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="css/perfil.css" media="screen">
     <link rel="shortcut icon" href="icon.png">
 
     <title>Login</title>
 </head>
 
 <body>
-    <%- include('./header'); %>
-    
+    <%- include('./headerRegistrado'); %>
+
     <div id="containerGeneral">
-        
-        <h1>Tu perfil</h1>
-        <div>
-            <p>Nombre</p>
-            <p>Edad</p>
-            <p>Genero</p>
-            <p>Puntos</p>
-            <div>Botón modificar</div>
+        <h1 class="tituloPerfil">Tu perfil</h1>
+        <div class="panelPerfil">
+            <div class = "imagenDatos">
+                <div>Imagen</div>
+                <div class="datos">
+                    <p>
+                        <%= usuario.nombre %>
+                    </p>
+                    <p>
+                        <% if(usuario.genero === "hombre"){ %>
+                        Hombre
+                        <%}else{%>
+                        Mujer
+                        <%}%>
+                    </p>
+                    <p>
+                        <%= usuario.fechaNacimiento %>
+                    </p>
+                    <p>
+                        <%= usuario.puntos %>
+                    </p>
+
+                </div>
+            </div>
+            <div class="botonModif">Botón modificar</div>
         </div>
-        
     </div>
 
 </body>

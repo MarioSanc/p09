@@ -4,7 +4,7 @@
 }
 body{
 	background-image: url("../img/fondo3.jpg");
-
+	font-family: 'Mali', cursive;
 }
 #contenedorTitulo{
 	width: 100%;
@@ -14,7 +14,6 @@ body{
 }
 .titulo{
 	padding-top: 30px;
-	font-family: 'Mali', cursive;
 	font-size: 90px;
 	color:white;
 }
