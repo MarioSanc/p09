@@ -1,0 +1,40 @@
+h1{
+    color: black;
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+#container_general{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#una_solicitud{
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.una_solicitud{
+    display: flex;
+    flex-direction: row;
+}
+
+.input_p{
+    font-size: 20px;
+    padding: 5px;
+    display: inline-block;
+}
+
+.contenedor_centrado{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p,label{
+    font-size: 20px;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="es">
+
+<head>
+    <title> Preguntas - FaceBluff </title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/preguntas.css" media="screen">
+
+
+
+</head>
+
+<body>
+        <%- include('./headerRegistrado'); %>
+    <div id="contenedor">
+        <div>
+            <p>Preguntas seleccionadas aleatoriamente:</p>
+        </div>
+        <%lista_preguntas.forEach(pregunta=>{%>
+            <div >
+                <ul>
+                    
+                    <li>
+                        <form method="GET" action="/desarrollo_pregunta">
+                            <input type="hidden" name="id_pregunta" value="<%=pregunta.id%>">
+                            <input class="input_p" type="submit" value="<%=pregunta.texto_pregunta%>">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <% }); %>
+
+
+
+                <div id="nuevaPregunta">
+                    <p>¡Añade tus preguntas!</p>
+                    <div>
+                        <form method="GET" action="/nuevaPregunta">
+                            <input class="input_p" type="submit" value="Crear nueva pregunta">
+                        </form>
+                    </div>
+                </div>
+    </div>
+</body>
+
+</html>

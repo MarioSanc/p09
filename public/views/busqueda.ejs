@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Busqueda</title>
+	<link rel="stylesheet" type="text/css" href="busqueda.css">
+</head>
+<body>
+
+	<div id="container">
+		
+		<div id="titulo">
+			<h1>Resultados de busqueda</h1>
+		</div>
+
+
+
+		<div id="resultados">
+			<%lista_resultados.forEach(resultado => {%>
+
+
+			<div class="un_resultado">
+				<div class="imagen_pequenia"></div>
+
+
+				<p><%=resultado.nombre%></p>
+
+
+				    <form method="POST" action="/enviarSolicitudAmistad">
+                        <input type="hidden" name="id_amigo" value="<%=resultado.id %>" >
+                       <input  value="Solicitar amistad" type="submit">
+                    </form>
+			</div>
+
+
+
+			<%})%>
+			
+		</div>
+	</div>
+
+</body>
+</html>
