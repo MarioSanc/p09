@@ -264,6 +264,56 @@ app.post("/responder", function (request, response) {
 });
 
 
+const DAOUsers = require("./DAOUsers");
+
+app.get("/", function (request, response) {
+    response.redirect("/login");
+});
+
+
+app.get("/login", function (request, response) {
+    response.statusCode = 200;
+    response.render("login", { mensaje: null });
+});
+
+app.post("/login", function (request, response) {
+    response.statusCode = 200;
+    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result) {
+        if (err) {
+            response.status(500);
+            console.log(err.message);
+            response.end(err.message);
+        } else if (result) {
+            console.log("Usuario y contraseña correctos");
+            request.session.currentUser = request.body.correo;
+            response.redirect("/perfil");
+        } else {
+            console.log("Usuario y/o contraseña incorrectos");
+            response.render("login", { mensaje: "Dirección de correo y/o contraseña no válidos." });
+        }
+    });
+});
+
+app.get("/perfil", function (request, response) {
+    daoUsuarios.getUser(request.session.currentUser, (err, result) => {
+        if (err) {
+            response.status(500);
+            console.log(err.message);
+            response.end(err.message);
+        }
+        else {
+            
+            response.render("perfil", { usuario: result });//Hay que pasar la imagen también.
+        }
+    });
+});
+
+app.get("/desconectar", (request, response) => {
+    response.status(300);
+    request.session.destroy();
+    response.redirect("/login");
+    response.end();
+});
 
 
 

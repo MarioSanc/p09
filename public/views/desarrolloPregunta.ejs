@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Responde a la pregunta</title>
+	<link rel="stylesheet" type="text/css" href="busqueda.css">
+</head>
+<body>
+
+	<div id="container">
+		
+		<div id="titulo">
+			<h1><%=titulo.titulo%></h1>
+		</div>
+
+
+
+		
+
+				<form method="POST" action="/responder">
+
+			<%lista_respuestas.forEach(respuesta => {%>
+			<div class="un_resultado">
+
+				<input id="<%=respuesta._id%>" name="respuestaID" type="radio" value='<%=respuesta._id%>'>
+				<p><%=respuesta.text%></p>
+					
+			</div>
+			<%})%>
+
+			<input id="respuesta_especial" name="respuestaID" type="radio" value="-1">
+			<input id="respuesta_especial_texto" name="respuesta_especial_texto" type="text">
+			<input id="id_titulo" name="id_pregunta" type="hidden" value="<%=titulo.id%>">
+			
+			<div>
+					<input  type="submit" value="Responder">
+        </div>
+				</form>
+
+	
+		
+        
+       
+	</div>
+
+</body>
+</html>

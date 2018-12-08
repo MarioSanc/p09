@@ -1,0 +1,56 @@
+    Crear un proyecto node con el comando 
+npm init 
+    indicando como punto de entrada el fichero app.js.
+
+    Instalar en el proyecto los módulos mysql, express, ejs y body-parser.
+npm install mysql --save
+npm install express --save
+npm install ejs --save
+npm install body-parser --save 
+
+    el servidor se reinicie automáticamente 
+    cada vez que se realicen cambios en alguno de los ficheros. 
+    Se puede instalar nodemon con el comando 
+npm install -g nodemon.
+
+    nodemon app.js
+
+    morgan es un middleware para mostrar la interaccion del cliente/servidor
+npm install morgan --save
+
+    EL MIDDLEWARE express-session 
+    Gestiona el almacenamiento de sesiones.
+npm install express-session --save
+    en mysql:
+npm install express-mysql-session --save
+
+
+    El middleware body-parser no puede analizar formularios enviados con la codificación 
+    multipart/form-data. 
+    Existe otro middleware destinado a ello: multer 
+npm install multer --save 
+
+
+
+
+
+Tabla relacion -> 
+        estado: 
+        0 -> relacion de amistad
+        1 -> peticion de amistad del usuario_inicio_relacion usarioa (Alpha) al otro usuario (Beta)
+                    usuario_inicio_relacion no necesario
+
+insert into tabla_relacion (`id_usuario_A`, `id_usuario_B`, `estado_relacion`, `usuario_inicio_relacion`) values (3,4,1,1);
+
+ALTER TABLE `tabla_relacion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+
+
+  ALTER TABLE `tabla_usuario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+
+    ALTER TABLE `tabla_respuestas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
