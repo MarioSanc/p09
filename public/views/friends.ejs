@@ -3,37 +3,37 @@
 
 <head>
 	<title>Mis amigos</title>
-	<link rel="stylesheet" type="text/css" href="friends.css">
+	<link rel="stylesheet" type="text/css" href="css/friends.css">
 </head>
 
 <body>
-
+		<%- include('./headerRegistrado'); %>
 	<div id="container_general">
 
-		<div id="solucitudes">
-			<div class="titulo">
-				<h1>Solicitudes de amistad</h1>
+		<div id="solucitudes" class="contenedor_centrado">
+			<div >
+				<h1>Solicitudes de amistad:</h1>
 			</div>
 
 			<div id="las_solicitudes">
 				<% lista_solicitudes.forEach(solicitud => {  %>
 				<div class="una_solicitud">
 					<div class="imagen_pequenia"></div>
-					<p>
+					<p id="una_solicitud">
 						<%=solicitud.nombre%>
 					</p>
 
 
-					<div class="aceptarYrechazar">
+					
 						<form method="POST" action="/aceptarSolicitudAmistad">
 							<input type="hidden" name="id_amigo" value="<%=solicitud.id_usuario_A%>" >
-							<input value="Añadir" type="submit">
+							<input class="input_p" value="Añadir" type="submit">
 						</form>
 						<form method="POST" action="/rechazarSolicitudAmistad">
 							<input type="hidden" name="id_amigo" value="<%=solicitud.id_usuario_A%> ">
-							<input value="Rechazar" type="submit">
+							<input class="input_p"   value="Rechazar" type="submit">
 						</form>
-					</div>
+					
 
 				</div>
 				<%})%>
@@ -42,15 +42,15 @@
 
 		</div>
 
-		<div id="busqueda">
-			<div class="titulo">
-				<h1>Busqueda de usuarios</h1>
+		<div id="busqueda" class="contenedor_centrado">
+			<div >
+				<h1>Búsqueda de usuarios:</h1>
 			</div>
 			<div id="la_busqueda">
 				<form action="/buscarNombre" method="GET">
 					<label>Buscar por nombre: </label>
 					<input type="search" name="nombre">
-					<input type="submit" value="Buscar">
+					<input type="submit" value="Buscar" class="input_p">
 				</form>
 			</div>
 
@@ -60,9 +60,9 @@
 
 		</div>
 
-		<div id="amigos">
-			<div class="titulo">
-				<h1>Mis amigos</h1>
+		<div id="amigos" class="contenedor_centrado">
+			<div >
+				<h1>Mis amigos:</h1>
 			</div>
 
 			<div id="los_amigos">

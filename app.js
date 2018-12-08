@@ -80,7 +80,7 @@ app.listen(config.port, function (err) {
 });
 
 
-app.get("/friends", function (request, response) {
+app.get("/friends", middleware_acceso,function (request, response) {
     response.statusCode = 200;
     daoF.get_amigos(request.session.currentUserId ,function(err,_lista_amigos){
         if (err) {
@@ -102,7 +102,7 @@ app.get("/friends", function (request, response) {
     });
 });
 
-app.post("/aceptarSolicitudAmistad", function (request, response) {
+app.post("/aceptarSolicitudAmistad",middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
     console.log(request.body.id_amigo);
@@ -116,7 +116,7 @@ app.post("/aceptarSolicitudAmistad", function (request, response) {
     })
 });
 
-app.post("/rechazarSolicitudAmistad", function (request, response) {
+app.post("/rechazarSolicitudAmistad",middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
     //console.log(request.body.id_amigo);
@@ -130,7 +130,7 @@ app.post("/rechazarSolicitudAmistad", function (request, response) {
     })
 });
 
-app.post("/enviarSolicitudAmistad", function (request, response) {
+app.post("/enviarSolicitudAmistad",middleware_acceso, function (request, response) {
     response.statusCode = 200;
     
       //console.log(request.body.id_amigo);
@@ -146,7 +146,7 @@ app.post("/enviarSolicitudAmistad", function (request, response) {
 
 
 
-app.get("/buscarNombre", function (request, response) {
+app.get("/buscarNombre", middleware_acceso,function (request, response) {
     response.statusCode = 200;
     daoF.get_usuarios_por_nombre(request.query.nombre,request.session.currentUserId ,function cb(err, usuarios){
        
@@ -158,7 +158,7 @@ app.get("/buscarNombre", function (request, response) {
     });
 });
 
-app.get("/preguntas", function (request, response) {
+app.get("/preguntas",middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
     daoPR.get_preguntas(function cb(err, preguntas){
@@ -171,18 +171,19 @@ app.get("/preguntas", function (request, response) {
     });
 });
 
-app.get("/nuevaPregunta", function (request, response) {
+app.get("/nuevaPregunta", middleware_acceso,function (request, response) {
     response.statusCode = 200;
     response.render("aniadePregunta");
 });
 
 
-app.post("/nuevaPregunta", function (request, response) {
+app.post("/nuevaPregunta",middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
     let allAnswers = request.body.respuestas;
     let answer = allAnswers.split("\n");
 
+   // console.log(request.body.la_pregunta);
     daoPR.aniadir_pregunta(request.body.la_pregunta,answer,function cd(err){
         if(err)console.log(err);
         else{
@@ -193,7 +194,7 @@ app.post("/nuevaPregunta", function (request, response) {
 });
 
 
-app.get("/desarrollo_pregunta", function (request, response) {
+app.get("/desarrollo_pregunta", middleware_acceso,function (request, response) {
     response.statusCode = 200;
 
     daoPR.get_info_pregunta(request.query.id_pregunta,function cb(err,resultado){
@@ -221,7 +222,7 @@ app.get("/desarrollo_pregunta", function (request, response) {
 });
 
 
-app.post("/responder", function (request, response) {
+app.post("/responder",middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
     if(request.body.respuestaID == -1){

@@ -1,0 +1,40 @@
+#container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.input_p{
+    margin-top: 25px;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.label{
+    font-size: 25px;
+    font-weight: 800;
+}
+
+#boton{
+    display: flex;
+    justify-content: center;
+}
+
+#lasRespuestas{
+    margin-top: 20px;
+}
+
+#textarea{
+    margin-top: 25px;
+    width: 500px;
+    height: 100px;
+}
+
+#titulo{
+    margin-top: 25px;
+    width: 500px;
+    height: 25px;
+    
+}

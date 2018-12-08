@@ -2,10 +2,10 @@
 <html>
 <head>
 	<title>Responde a la pregunta</title>
-	<link rel="stylesheet" type="text/css" href="busqueda.css">
+	<link rel="stylesheet" type="text/css" href="css/desarrollo_pregunta.css" media="screen">
 </head>
 <body>
-
+		<%- include('./headerRegistrado'); %>
 	<div id="container">
 		
 		<div id="titulo">
@@ -14,25 +14,29 @@
 
 
 
-		
+	
 
 				<form method="POST" action="/responder">
 
 			<%lista_respuestas.forEach(respuesta => {%>
+				
 			<div class="un_resultado">
 
-				<input id="<%=respuesta._id%>" name="respuestaID" type="radio" value='<%=respuesta._id%>'>
-				<p><%=respuesta.text%></p>
+				<input class="input_radial" id="<%=respuesta._id%>" name="respuestaID" type="radio" value='<%=respuesta._id%>'>
+				<p class="texto_inline_block"><%=respuesta.text%></p>
 					
 			</div>
+		
 			<%})%>
 
+		</ul>
+
 			<input id="respuesta_especial" name="respuestaID" type="radio" value="-1">
-			<input id="respuesta_especial_texto" name="respuesta_especial_texto" type="text">
+			<input id="respuesta_especial_texto" name="respuesta_especial_texto" type="text" class="texto_inline_block" class="input_especial">
 			<input id="id_titulo" name="id_pregunta" type="hidden" value="<%=titulo.id%>">
 			
 			<div>
-					<input  type="submit" value="Responder">
+					<input  type="submit" value="Responder" class="input_p">
         </div>
 				</form>
 

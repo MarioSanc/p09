@@ -1,25 +1,42 @@
 <html>
 
 <head>
-
+        <title> Añade Pregunta - FaceBluff </title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css" href="css/nuevaPregunta.css" media="screen">
 
 </head>
 
 <body>
+        <%- include('./headerRegistrado'); %>
 
+        <div id="container">
         <form action="/nuevaPregunta" method="POST">
-            <label>Titulo de la nueva pregunta: </label>
-            <input type="text" name="la_pregunta">
+
+            <div>
+                    <label   class="label">Titulo de la nueva pregunta: </label>
+            </div>
+          
+            <input id="titulo" type="text" name="la_pregunta">
 
 
-            <label> Respuestas </label>
-            <textarea class="rellenar" name="respuestas" placeholder="Escribe aquí las respuestas!"></textarea>
+            <div id="lasRespuestas">
+                    <label class="label"> Respuestas </label>
+
+                    <div>
+                            <textarea id="textarea" name="respuestas" placeholder="Escribe aquí las respuestas, una en cada línea"></textarea>
+                    </div>
+                
+                
+            </div>
 
 
-            <input type="submit" value="Añadir">
+            <div id="boton">
+                    <input type="submit" value="Añadir" class="input_p">
+            </div>
+            
         </form>
-
-
+    </div>
 
 </body>
 
