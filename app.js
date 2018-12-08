@@ -5,7 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const morgan = require("morgan");
-
+const expressValidator = require('express-validator');
 //daos
 const DAOUsers = require("./DAOUsers");
 
@@ -36,13 +36,26 @@ const middlewareSession = session({
     secret: "foobar34", resave: false, store: sessionStore
 });
 
-app.use(middlewareSession);
+
+function flashMiddleware(request, response, next) {
+    response.setFlash = function (msg) {
+        request.session.flashMsg = msg;
+    };
+    response.locals.getAndClearFlash = function () {
+        let msg = request.session.flashMsg;
+        delete request.session.flashMsg;
+        return msg;
+    };
+    next();
+};
 
 const ficherosEstaticos = path.join(__dirname, "public");
 
+app.use(middlewareSession);
 app.use(express.static(ficherosEstaticos));
-
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator());
+app.use(flashMiddleware);
 
 // Arrancar el servidor
 app.listen(config.port, function (err) {
@@ -78,7 +91,8 @@ app.post("/login", function (request, response) {
             response.redirect("/perfil");
         } else {
             console.log("Usuario y/o contraseña incorrectos");
-            response.render("login", { mensaje: "Dirección de correo y/o contraseña no válidos." });
+            response.setFlash("Dirección de correo y/o contraseña no válidos.");
+            response.redirect("login");
         }
     });
 });
@@ -91,7 +105,6 @@ app.get("/perfil", function (request, response) {
             response.end(err.message);
         }
         else {
-            
             response.render("perfil", { usuario: result });//Hay que pasar la imagen también.
         }
     });
@@ -103,4 +116,50 @@ app.get("/desconectar", (request, response) => {
     response.redirect("/login");
     response.end();
 });
+
+app.get("/registro", (request, response) => {
+    response.status(200);
+    response.render("registro", { errores: null });
+});
+
+app.post("/registro", function (request, response) {
+    request.checkBody("nombre", "Nombre de usuario vacío").notEmpty();
+    request.checkBody("email", "Dirección de correo no válida").isEmail();
+
+    request.getValidationResult().then(result => {
+
+        if (result.isEmpty()) {
+
+            let datos = new Object();
+
+            datos.email = request.body.email;
+            datos.password = request.body.password;
+            datos.nombre = request.body.nombre;
+            datos.genero = request.body.genero;
+            datos.fechaNacimiento = request.body.fechaNacimiento;
+            datos.imagen = request.body.imagen;
+
+            daoUsuarios.newUser(datos, (error, res) => {
+                if (error) {
+                    if (error.errno === 1062) {
+                        response.setFlash("El email introducido ya está en uso.");
+                        response.redirect("registro");   
+                    } else console.log(error.message);
+                    response.end();
+                }
+                else{
+                    response.redirect("login");
+                    response.end();
+                }
+            });
+        } else {
+            console.log(result.length);
+            response.render("registro", { errores: result.mapped() });
+            response.end();
+        }
+    });
+
+});
+
+
 

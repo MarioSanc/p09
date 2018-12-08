@@ -1,0 +1,58 @@
+.panelRegistro{
+    margin-top: 50px;
+    display:flex;
+	flex-direction: column;
+	align-self: center;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url("../img/morado.jpg");
+	height: 500px;
+	width: 600px;
+	border: black solid;
+	border-radius: 10px;
+	min-width: 450px;
+}
+.tituloRegistro{
+	margin-top: 30px;
+	text-align: center;
+}
+
+.campoEscribir{
+    height: 20px;
+}
+.campoRegistro {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+
+.botonesGenero {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    justify-content: space-between;
+}
+
+.campoRegistro, 
+.botonesGenero{
+    margin-left: 70px;
+    margin-right: 70px;
+    margin-top: 10px;
+    font-size: 20px;
+    color: white;
+}
+
+.botonRegistro {
+	width:200px;
+	height: 50px;
+	margin-top: 40px;
+	margin-left: auto;
+	margin-right: auto;
+	cursor: pointer;
+	font-family: 'Mali', cursive;
+	font-size: 20px;
+	background-color: white;
+}
+.botonRegistro:hover{
+	background-color: grey;
+}

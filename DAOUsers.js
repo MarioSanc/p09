@@ -56,19 +56,19 @@ class DAOUsers {
                             callback(err_);
                         }
                         else {
-                            if(resultado.length === 0){
+                            if (resultado.length === 0) {
                                 err_ = new Error("No existe el usuario");
 
                                 callback(err_);
-                            }else
-                            callback(null, resultado[0].img);
+                            } else
+                                callback(null, resultado[0].img);
                         }
                     })
             }
         });
     }
 
-    getUser(email, callback){
+    getUser(email, callback) {
         let err_;
         this.mypool.getConnection(function (err, connecction) {
             if (err) {
@@ -85,18 +85,40 @@ class DAOUsers {
                             callback(err_);
                         }
                         else {
-                            if(resultado.length === 0){
+                            if (resultado.length === 0) {
                                 err_ = new Error("No existe el usuario ");
 
                                 callback(err_);
-                            }else
-                            callback(null, resultado[0]);
+                            } else
+                                callback(null, resultado[0]);
                         }
                     })
             }
         });
     }
 
+    newUser(datos, callback) {
+        this.mypool.getConnection(function (err, connecction) {
+            if (err){
+                callback(new Error("El pool no logra la conexion" + err));
+                return;
+            } 
+            else {
+                connecction.query("insert into usuario(email, password, nombre, genero, fechaNacimiento, imagen) values (?,?,?,?,?,?)",
+                    [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.imagen], function (err, resultado) {
+                        connecction.release();
+                        if (err){
+                            callback(err);
+                            return;
+                        }
+                        else {
+                            console.log(resultado.insertId);
+                            callback(null, resultado.insertId);
+                        }
+                    });
+            }
+        });
+    }
 
 }
 

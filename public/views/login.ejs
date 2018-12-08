@@ -11,19 +11,22 @@
 
 <body>
     <%- include('./header'); %>
-    
+
     <div id="containerGeneral">
         <h1 class="tituloLogin">Inicio de sesión</h1>
         <form action="/login" method="POST" class="panelLogin">
              <div class = "mail">
                  <p class="nombreCamposLogin"> Correo:</p> 
-                 <input type="text" value="usuario@ucm.es" name="correo" class="textoLogin"><br>
+                 <input type="text" value="" name="correo" class="textoLogin"><br>
             </div>
              <div class = "clave">
                 <p class="nombreCamposLogin"> Contraseña:</p> 
                  <input type="text" name="password" value="" class = "textoLogin"><br>
             </div>
-            <% if(mensaje){%> <p class="flash"> <%= mensaje %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
+
+            <% let msg = getAndClearFlash();
+            if(msg){%> <p class="flash"> <%= msg %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
+
             <input type="submit" value="Aceptar" class="botonLogin">
 
          </form>
