@@ -14,7 +14,7 @@ class DAOFriends {
                 callback(err, undefined);
             }
 
-            connection.query("SELECT tabla_relacion.id_usuario_A , tabla_usuario.nombre FROM `tabla_relacion` join tabla_usuario on (tabla_relacion.id_usuario_A = tabla_usuario.id) WHERE `id_usuario_B` = ? AND tabla_relacion.estado_relacion = 1 ",
+            connection.query("SELECT tabla_relacion.id_usuario_A , usuario.nombre FROM `tabla_relacion` join usuario on (tabla_relacion.id_usuario_A = usuario.id) WHERE `id_usuario_B` = ? AND tabla_relacion.estado_relacion = 1 ",
                 [id_usuario], function (err, solicitudes) {
                     connection.release();
                     if (err) { callback(err, undefined); }
@@ -60,8 +60,8 @@ class DAOFriends {
         this.pool.getConnection((err, connection) => {
             let nombre2 = "%" + nombre + "%";
             connection.query(
-                "SELECT id, nombre, imagen FROM tabla_usuario WHERE nombre LIKE ? and nombre not in (SELECT nombre FROM `tabla_relacion` JOIN tabla_usuario ON id_usuario_A = tabla_usuario.id or id_usuario_B = tabla_usuario.id "+
-                "WHERE estado_relacion = 0 and (`id_usuario_A` = ? OR `id_usuario_B` = ?) AND tabla_usuario.id != ?)",
+                "SELECT id, nombre, imagen FROM usuario WHERE nombre LIKE ? and nombre not in (SELECT nombre FROM `tabla_relacion` JOIN usuario ON id_usuario_A = usuario.id or id_usuario_B = usuario.id "+
+                "WHERE estado_relacion = 0 and (`id_usuario_A` = ? OR `id_usuario_B` = ?) AND usuario.id != ?)",
                 [nombre2,id_usuario,id_usuario,id_usuario], function (err, usuarios) {
                     connection.release();
                     if (err) { callback(err, undefined);}
@@ -95,8 +95,8 @@ class DAOFriends {
                 callback(err, undefined);
             }
 
-            connection.query("SELECT * FROM `tabla_relacion` JOIN tabla_usuario ON id_usuario_A = tabla_usuario.id or id_usuario_B = tabla_usuario.id "+
-             "WHERE estado_relacion = 0 and (`id_usuario_A` = ? OR `id_usuario_B` = ?) AND tabla_usuario.id != ? ",
+            connection.query("SELECT * FROM `tabla_relacion` JOIN usuario ON id_usuario_A = usuario.id or id_usuario_B = usuario.id "+
+             "WHERE estado_relacion = 0 and (`id_usuario_A` = ? OR `id_usuario_B` = ?) AND usuario.id != ? ",
                 [id_usuario,id_usuario,id_usuario], function (err, solicitudes) {
                     connection.release();
                     if (err) { callback(err, undefined); }

@@ -61,6 +61,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 function middleware_acceso(request, response, next) {
     if (request.session.currentUser != undefined) {
         response.locals.userEmail = request.session.currentUser;
+        response.locals.currentUserId = request.session.currentUserId;
         next();  // Saltar al siguiente middleware
     } else {
         response.redirect("/login");
@@ -81,13 +82,13 @@ app.listen(config.port, function (err) {
 
 app.get("/friends", function (request, response) {
     response.statusCode = 200;
-    daoF.get_amigos(/*request.session.current_user_id*/0,function(err,_lista_amigos){
+    daoF.get_amigos(request.session.currentUserId ,function(err,_lista_amigos){
         if (err) {
             console.error("1"+err);
         }else{
             
             
-            daoF.get_solicitudes_amistad(/*request.session.current_user_id*/0,function(err,lista_solicitudes_amistad){
+            daoF.get_solicitudes_amistad(request.session.currentUserId ,function(err,lista_solicitudes_amistad){
               if (err) {
                    console.error("2"+err);
                }else{
@@ -105,7 +106,7 @@ app.post("/aceptarSolicitudAmistad", function (request, response) {
     response.statusCode = 200;
 
     console.log(request.body.id_amigo);
-    daoF.aceptar_solicitud_amistad(0,request.body.id_amigo, 
+    daoF.aceptar_solicitud_amistad(request.session.currentUserId ,request.body.id_amigo, 
         function(err) {
         if (err) { console.error(err); }
         else {
@@ -119,7 +120,7 @@ app.post("/rechazarSolicitudAmistad", function (request, response) {
     response.statusCode = 200;
 
     //console.log(request.body.id_amigo);
-    daoF.rechazar_solicitud_amistad(0,request.body.id_amigo, 
+    daoF.rechazar_solicitud_amistad(request.session.currentUserId ,request.body.id_amigo, 
         function(err) {
         if (err) { console.error(err); }
         else {
@@ -133,7 +134,7 @@ app.post("/enviarSolicitudAmistad", function (request, response) {
     response.statusCode = 200;
     
       //console.log(request.body.id_amigo);
-    daoF.enviar_solicitud_amistad(0,request.body.id_amigo, 
+    daoF.enviar_solicitud_amistad(request.session.currentUserId ,request.body.id_amigo, 
         function(err) {
         if (err) { console.error(err); }
         else {
@@ -147,7 +148,7 @@ app.post("/enviarSolicitudAmistad", function (request, response) {
 
 app.get("/buscarNombre", function (request, response) {
     response.statusCode = 200;
-    daoF.get_usuarios_por_nombre(request.query.nombre,0,function cb(err, usuarios){
+    daoF.get_usuarios_por_nombre(request.query.nombre,request.session.currentUserId ,function cb(err, usuarios){
        
         if(err)console.log(err);
         else{
@@ -232,7 +233,7 @@ app.post("/responder", function (request, response) {
 
            // console.log(insertedID);
 
-           daoPR.aniadirRespuestaUsuario(/*request.session.currentUserId*/0, insertedID, 
+           daoPR.aniadirRespuestaUsuario(request.session.currentUserId , insertedID, 
             function(err) {
             if (err) { console.error(err); }
             else {
@@ -249,7 +250,7 @@ app.post("/responder", function (request, response) {
 
     
     
-    daoPR.aniadirRespuestaUsuario(/*request.session.currentUserId*/0, request.body.respuestaID, 
+    daoPR.aniadirRespuestaUsuario(request.session.currentUserId , request.body.respuestaID, 
         function(err) {
         if (err) { console.error(err); }
         else {
@@ -265,6 +266,7 @@ app.post("/responder", function (request, response) {
 
 
 const DAOUsers = require("./DAOUsers");
+const daoUsuarios = new DAOUsers(pool);
 
 app.get("/", function (request, response) {
     response.redirect("/login");
@@ -278,7 +280,7 @@ app.get("/login", function (request, response) {
 
 app.post("/login", function (request, response) {
     response.statusCode = 200;
-    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result) {
+    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result,id_usuario) {
         if (err) {
             response.status(500);
             console.log(err.message);
@@ -286,6 +288,7 @@ app.post("/login", function (request, response) {
         } else if (result) {
             console.log("Usuario y contraseña correctos");
             request.session.currentUser = request.body.correo;
+            request.session.currentUserId = id_usuario;
             response.redirect("/perfil");
         } else {
             console.log("Usuario y/o contraseña incorrectos");

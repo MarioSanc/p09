@@ -1,7 +1,5 @@
 "use strict";
 
-const mysql = require("mysql");
-
 class DAOUsers {
 
     constructor(pool) {
@@ -29,7 +27,7 @@ class DAOUsers {
                         }
                         else {
                             if (resultado.length === 1)
-                                callback(null, true);
+                                callback(null, true, resultado[0].id);
                             else
                                 callback(null, false);
                         }

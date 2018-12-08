@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-11-2018 a las 14:54:23
+-- Tiempo de generación: 08-12-2018 a las 12:08:35
 -- Versión del servidor: 10.1.36-MariaDB
 -- Versión de PHP: 7.2.11
 
@@ -47,13 +47,6 @@ CREATE TABLE `tabla_preguntas` (
   `texto_pregunta` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `tabla_preguntas`
---
-
-INSERT INTO `tabla_preguntas` (`id`, `texto_pregunta`) VALUES
-(6, 'que tal?');
-
 -- --------------------------------------------------------
 
 --
@@ -68,81 +61,17 @@ CREATE TABLE `tabla_relacion` (
   `usuario_inicio_relacion` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `tabla_relacion`
---
-
-INSERT INTO `tabla_relacion` (`id`, `id_usuario_A`, `id_usuario_B`, `estado_relacion`, `usuario_inicio_relacion`) VALUES
-(12, 0, 2, 1, 0);
-
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tabla_respuestas`
 --
 
-CREATE TABLE `usuario` (
-  `id` int(5) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `fechaNacimiento` date NOT NULL,
-  `genero` enum('hombre','mujer','otro','') NOT NULL,
-  `imagen` varchar(100) DEFAULT NULL,
-  `puntos` int(5) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`id`, `email`, `password`, `nombre`, `fechaNacimiento`, `genero`, `imagen`, `puntos`) VALUES
-(1, 'usuario@ucm.es', '', 'Usuario', '2018-12-01', 'hombre', '', 0),
-(4, 'usuariok@ucm.es', '123', 'Uusuario', '2018-12-03', 'hombre', NULL, NULL),
-(6, 'usuariozk@ucm.es', '123', 'Uusuario', '2018-12-03', 'hombre', NULL, NULL);
-
---
--- Índices para tablas volcadas
---
-
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `correo` (`email`),
-  ADD UNIQUE KEY `id` (`id`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
 CREATE TABLE `tabla_respuestas` (
   `id` int(11) NOT NULL,
   `id_pregunta` int(11) NOT NULL,
   `texto` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `tabla_respuestas`
---
-
-INSERT INTO `tabla_respuestas` (`id`, `id_pregunta`, `texto`) VALUES
-(13, 6, 'bien\r'),
-(14, 6, 'mal');
 
 -- --------------------------------------------------------
 
@@ -155,16 +84,22 @@ CREATE TABLE `tabla_respuestas_usuario` (
   `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `tabla_respuestas_usuario`
---
-
-INSERT INTO `tabla_respuestas_usuario` (`id_respuesta`, `id_usuario`) VALUES
-(13, 0),
-(13, 0);
-
 -- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `id` int(5) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `fechaNacimiento` date NOT NULL,
+  `genero` enum('hombre','mujer','otro','') NOT NULL,
+  `imagen` varchar(100) DEFAULT NULL,
+  `puntos` int(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Índices para tablas volcadas
@@ -195,7 +130,13 @@ ALTER TABLE `tabla_relacion`
 ALTER TABLE `tabla_respuestas`
   ADD PRIMARY KEY (`id`);
 
-
+--
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `correo` (`email`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -205,19 +146,25 @@ ALTER TABLE `tabla_respuestas`
 -- AUTO_INCREMENT de la tabla `tabla_preguntas`
 --
 ALTER TABLE `tabla_preguntas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tabla_relacion`
 --
 ALTER TABLE `tabla_relacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tabla_respuestas`
 --
 ALTER TABLE `tabla_respuestas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
