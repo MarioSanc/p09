@@ -27,6 +27,7 @@ const app = express();
 const pool = mysql.createPool(config.mysqlConfig);
 
 // Crear una instancia de DAOTasks
+const daoUsuarios = new DAOUsers(pool);
 const daoF = new DAOFriends(pool);
 const daoPR = new DAOPreguntasRespuestas(pool);
 
@@ -98,196 +99,6 @@ app.listen(config.port, function (err) {
     }
 });
 
-
-app.get("/friends", middleware_acceso,function (request, response) {
-    response.statusCode = 200;
-    daoF.get_amigos(request.session.currentUserId ,function(err,_lista_amigos){
-        if (err) {
-            console.error("1"+err);
-        }else{
-            
-            
-            daoF.get_solicitudes_amistad(request.session.currentUserId ,function(err,lista_solicitudes_amistad){
-              if (err) {
-                   console.error("2"+err);
-               }else{
-                   console.log(_lista_amigos);
-                    response.render("friends",{lista_solicitudes:lista_solicitudes_amistad,
-                                                lista_amigos:_lista_amigos});
-                }
-            });
-            
-        }
-    });
-});
-
-app.post("/aceptarSolicitudAmistad",middleware_acceso, function (request, response) {
-    response.statusCode = 200;
-
-    console.log(request.body.id_amigo);
-    daoF.aceptar_solicitud_amistad(request.session.currentUserId ,request.body.id_amigo, 
-        function(err) {
-        if (err) { console.error(err); }
-        else {
-            response.status(300);
-            response.redirect("/friends");
-        }
-    })
-});
-
-app.post("/rechazarSolicitudAmistad",middleware_acceso, function (request, response) {
-    response.statusCode = 200;
-
-    //console.log(request.body.id_amigo);
-    daoF.rechazar_solicitud_amistad(request.session.currentUserId ,request.body.id_amigo, 
-        function(err) {
-        if (err) { console.error(err); }
-        else {
-            response.status(300);
-            response.redirect("/friends");
-        }
-    })
-});
-
-app.post("/enviarSolicitudAmistad",middleware_acceso, function (request, response) {
-    response.statusCode = 200;
-    
-      //console.log(request.body.id_amigo);
-    daoF.enviar_solicitud_amistad(request.session.currentUserId ,request.body.id_amigo, 
-        function(err) {
-        if (err) { console.error(err); }
-        else {
-            response.status(300);
-            response.redirect("/friends");
-        }
-    })
-});
-
-
-
-app.get("/buscarNombre", middleware_acceso,function (request, response) {
-    response.statusCode = 200;
-    daoF.get_usuarios_por_nombre(request.query.nombre,request.session.currentUserId ,function cb(err, usuarios){
-       
-        if(err)console.log(err);
-        else{
-            response.render("busqueda",{lista_resultados:usuarios});
-        }
-
-    });
-});
-
-app.get("/preguntas",middleware_acceso, function (request, response) {
-    response.statusCode = 200;
-
-    daoPR.get_preguntas(function cb(err, preguntas){
-       
-        if(err)console.log(err);
-        else{
-            response.render("preguntas",{lista_preguntas:preguntas})
-        }
-
-    });
-});
-
-app.get("/nuevaPregunta", middleware_acceso,function (request, response) {
-    response.statusCode = 200;
-    response.render("aniadePregunta");
-});
-
-
-app.post("/nuevaPregunta",middleware_acceso, function (request, response) {
-    response.statusCode = 200;
-
-    let allAnswers = request.body.respuestas;
-    let answer = allAnswers.split("\n");
-
-   // console.log(request.body.la_pregunta);
-    daoPR.aniadir_pregunta(request.body.la_pregunta,answer,function cd(err){
-        if(err)console.log(err);
-        else{
-            response.redirect("preguntas");
-        }
-    });
-
-});
-
-
-app.get("/desarrollo_pregunta", middleware_acceso,function (request, response) {
-    response.statusCode = 200;
-
-    daoPR.get_info_pregunta(request.query.id_pregunta,function cb(err,resultado){
-        if(err)console.log(err);
-        else{
-            
-            console.log(resultado);
-            let arrayRespuestas = new Array();
-            resultado.forEach(tupla=> {
-
-                let text=tupla.texto;
-                let _id=tupla.id;
-                let una_respuesta = {text, _id};
-                arrayRespuestas.push(una_respuesta)
-
-            });
-            
-            console.log(resultado);
-            let _titulo = {titulo:resultado[0].texto_pregunta,id:resultado[0].id_pregunta};
-            //console.log(arrayRespuestas);
-            response.render("desarrolloPregunta",{lista_respuestas:arrayRespuestas,titulo:_titulo})
-        }
-
-    });
-});
-
-
-app.post("/responder",middleware_acceso, function (request, response) {
-    response.statusCode = 200;
-
-    if(request.body.respuestaID == -1){
-
-      //  console.log(request.body.respuesta_especial_texto);
-      //  console.log(request.body.id_pregunta);
-
-        daoPR.aniadir_respuesta_especial(request.body.respuesta_especial_texto,request.body.id_pregunta,function cb(insertedID){
-
-           // console.log(insertedID);
-
-           daoPR.aniadirRespuestaUsuario(request.session.currentUserId , insertedID, 
-            function(err) {
-            if (err) { console.error(err); }
-            else {
-                console.log("Respondido");
-                response.status(300);
-                response.redirect("/preguntas");
-                response.end();
-            }
-        })
-        })
-
-    }else{
-
-
-    
-    
-    daoPR.aniadirRespuestaUsuario(request.session.currentUserId , request.body.respuestaID, 
-        function(err) {
-        if (err) { console.error(err); }
-        else {
-            console.log("Respondido");
-            response.status(300);
-            response.redirect("/preguntas");
-            response.end();
-        }
-    })
-}
-
-});
-
-
-const DAOUsers = require("./DAOUsers");
-const daoUsuarios = new DAOUsers(pool);
-
 app.get("/", function (request, response) {
     response.redirect("/login");
 });
@@ -300,7 +111,7 @@ app.get("/login", function (request, response) {
 
 app.post("/login", function (request, response) {
     response.statusCode = 200;
-    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result,id_usuario) {
+    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result, id_usuario) {
         if (err) {
             response.status(500);
             console.log(err.message);
@@ -364,11 +175,11 @@ app.post("/registro", function (request, response) {
                 if (error) {
                     if (error.errno === 1062) {
                         response.setFlash("El email introducido ya está en uso.");
-                        response.redirect("registro");   
+                        response.redirect("registro");
                     } else console.log(error.message);
                     response.end();
                 }
-                else{
+                else {
                     response.redirect("login");
                     response.end();
                 }
@@ -381,6 +192,195 @@ app.post("/registro", function (request, response) {
     });
 
 });
+
+app.get("/friends", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+    daoF.get_amigos(request.session.currentUserId, function (err, _lista_amigos) {
+        if (err) {
+            console.error("1" + err);
+        } else {
+
+
+            daoF.get_solicitudes_amistad(request.session.currentUserId, function (err, lista_solicitudes_amistad) {
+                if (err) {
+                    console.error("2" + err);
+                } else {
+                    console.log(_lista_amigos);
+                    response.render("friends", {
+                        lista_solicitudes: lista_solicitudes_amistad,
+                        lista_amigos: _lista_amigos
+                    });
+                }
+            });
+
+        }
+    });
+});
+
+app.post("/aceptarSolicitudAmistad", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+
+    console.log(request.body.id_amigo);
+    daoF.aceptar_solicitud_amistad(request.session.currentUserId, request.body.id_amigo,
+        function (err) {
+            if (err) { console.error(err); }
+            else {
+                response.status(300);
+                response.redirect("/friends");
+            }
+        })
+});
+
+app.post("/rechazarSolicitudAmistad", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+
+    //console.log(request.body.id_amigo);
+    daoF.rechazar_solicitud_amistad(request.session.currentUserId, request.body.id_amigo,
+        function (err) {
+            if (err) { console.error(err); }
+            else {
+                response.status(300);
+                response.redirect("/friends");
+            }
+        })
+});
+
+app.post("/enviarSolicitudAmistad", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+
+    //console.log(request.body.id_amigo);
+    daoF.enviar_solicitud_amistad(request.session.currentUserId, request.body.id_amigo,
+        function (err) {
+            if (err) { console.error(err); }
+            else {
+                response.status(300);
+                response.redirect("/friends");
+            }
+        })
+});
+
+
+
+app.get("/buscarNombre", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+    daoF.get_usuarios_por_nombre(request.query.nombre, request.session.currentUserId, function cb(err, usuarios) {
+
+        if (err) console.log(err);
+        else {
+            response.render("busqueda", { lista_resultados: usuarios });
+        }
+
+    });
+});
+
+app.get("/preguntas", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+
+    daoPR.get_preguntas(function cb(err, preguntas) {
+
+        if (err) console.log(err);
+        else {
+            response.render("preguntas", { lista_preguntas: preguntas })
+        }
+
+    });
+});
+
+app.get("/nuevaPregunta", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+    response.render("aniadePregunta");
+});
+
+
+app.post("/nuevaPregunta", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+
+    let allAnswers = request.body.respuestas;
+    let answer = allAnswers.split("\n");
+
+    // console.log(request.body.la_pregunta);
+    daoPR.aniadir_pregunta(request.body.la_pregunta, answer, function cd(err) {
+        if (err) console.log(err);
+        else {
+            response.redirect("preguntas");
+        }
+    });
+
+});
+
+
+app.get("/desarrollo_pregunta", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+
+    daoPR.get_info_pregunta(request.query.id_pregunta, function cb(err, resultado) {
+        if (err) console.log(err);
+        else {
+
+            console.log(resultado);
+            let arrayRespuestas = new Array();
+            resultado.forEach(tupla => {
+
+                let text = tupla.texto;
+                let _id = tupla.id;
+                let una_respuesta = { text, _id };
+                arrayRespuestas.push(una_respuesta)
+
+            });
+
+            console.log(resultado);
+            let _titulo = { titulo: resultado[0].texto_pregunta, id: resultado[0].id_pregunta };
+            //console.log(arrayRespuestas);
+            response.render("desarrolloPregunta", { lista_respuestas: arrayRespuestas, titulo: _titulo })
+        }
+
+    });
+});
+
+
+app.post("/responder", middleware_acceso, function (request, response) {
+    response.statusCode = 200;
+
+    if (request.body.respuestaID == -1) {
+
+        //  console.log(request.body.respuesta_especial_texto);
+        //  console.log(request.body.id_pregunta);
+
+        daoPR.aniadir_respuesta_especial(request.body.respuesta_especial_texto, request.body.id_pregunta, function cb(insertedID) {
+
+            // console.log(insertedID);
+
+            daoPR.aniadirRespuestaUsuario(request.session.currentUserId, insertedID,
+                function (err) {
+                    if (err) { console.error(err); }
+                    else {
+                        console.log("Respondido");
+                        response.status(300);
+                        response.redirect("/preguntas");
+                        response.end();
+                    }
+                })
+        })
+
+    } else {
+
+
+
+
+        daoPR.aniadirRespuestaUsuario(request.session.currentUserId, request.body.respuestaID, function (err) {
+            if (err) { console.error(err); }
+            else {
+                console.log("Respondido");
+                response.status(300);
+                response.redirect("/preguntas");
+                response.end();
+            }
+        })
+    }
+
+});
+
+
+
 
 
 
