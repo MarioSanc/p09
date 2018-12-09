@@ -13,7 +13,8 @@ const DAOUsers = require("./DAOUsers");
 //const morgan = require("morgan"); 
 //const multer = require("multer");
 //const multerFactory = multer();
-
+let moment = require("moment");
+moment.locale('es');
 
 const session = require("express-session");
 const mysqlSession = require("express-mysql-session");
@@ -136,7 +137,8 @@ app.get("/perfil", function (request, response) {
             console.log(err.message);
             response.end(err.message);
         }
-        else {
+        else { 
+            result.fechaNacimiento = moment().diff(result.fechaNacimiento,'years');
             response.render("perfil", { usuario: result });//Hay que pasar la imagen también.
         }
     });
@@ -148,6 +150,11 @@ app.get("/desconectar", (request, response) => {
     response.redirect("/login");
     response.end();
 });
+
+app.get("/imagen/:id", function(request, response) {
+    let pathImg = path.join(__dirname, "uploads", request.params.id);
+    response.sendFile(pathImg);
+    });
 
 app.get("/registro", (request, response) => {
     response.status(200);

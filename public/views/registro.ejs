@@ -31,7 +31,7 @@
 
             <div class="campoRegistro">Fecha de nacimiento(dd/mm/aaaa): <input class="campoEscribir" type="date" name="fechaNacimiento"
                     placeholder="dd/mm/aaaa"></div>
-            <div class="campoRegistro">Imagen de Perfil: <input class="campoEscribir" type="text" name="imagen"></div>
+            <div class="campoRegistro">Imagen de Perfil: <input type="file" name="imagen"></div>
             
             <% let msg = getAndClearFlash();
             if(msg){%> <p class="flash"> <%= msg %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>

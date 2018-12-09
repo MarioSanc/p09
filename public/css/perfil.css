@@ -24,7 +24,11 @@
 }
 .datos{
     margin-left: 40px;
-    font-size: 20px;
+	font-size: 20px;
+	color:white;
+}
+.datos p{
+	margin-top: 20px;
 }
 .botonModif {
 	width:200px;

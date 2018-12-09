@@ -15,12 +15,15 @@
     <div id="containerGeneral">
         <h1 class="tituloPerfil">Tu perfil</h1>
         <div class="panelPerfil">
-            <div class = "imagenDatos">
+            <div class="imagenDatos">
                 <div>
                     <% if(usuario.imagen){ %>
-                        Imagen
+                    <tr>
+                        <td>Foto:</td>
+                        <td><img src="/imagen/<%= imagen %>"></td>
+                    </tr>
                     <%}else{%>
-                        <img src="../img/userImg.png" alt="Imagen de usuario." width="200" height="200">
+                    <img src="../img/userImg.png" alt="Imagen de usuario." width="200" height="200">
                     <%}%>
 
                 </div>
@@ -28,15 +31,15 @@
                     <p>
                         <%= usuario.nombre %>
                     </p>
+                    <p> 
+                            <%= usuario.fechaNacimiento %>  años.
+                        </p>
                     <p>
                         <% if(usuario.genero === "hombre"){ %>
                         Hombre.
                         <%}else if(usuario.genero === "mujer"){%>
                         Mujer.
                         <%}%>
-                    </p>
-                    <p>
-                        <%= usuario.fechaNacimiento %>.
                     </p>
                     <p>
                         <%= usuario.puntos %> puntos.
