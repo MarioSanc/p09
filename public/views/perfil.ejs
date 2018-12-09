@@ -4,9 +4,9 @@
 <head>
 
     <link rel="stylesheet" type="text/css" href="css/perfil.css" media="screen">
-    <link rel="shortcut icon" href="icon.png">
+    <link rel="shortcut icon" href="../img/icon.png">
 
-    <title>Login</title>
+    <title>Perfil | Facebluff</title>
 </head>
 
 <body>
@@ -16,28 +16,35 @@
         <h1 class="tituloPerfil">Tu perfil</h1>
         <div class="panelPerfil">
             <div class = "imagenDatos">
-                <div>Imagen</div>
+                <div>
+                    <% if(usuario.imagen){ %>
+                        Imagen
+                    <%}else{%>
+                        <img src="../img/userImg.png" alt="Imagen de usuario." width="200" height="200">
+                    <%}%>
+
+                </div>
                 <div class="datos">
                     <p>
                         <%= usuario.nombre %>
                     </p>
                     <p>
                         <% if(usuario.genero === "hombre"){ %>
-                        Hombre
-                        <%}else{%>
-                        Mujer
+                        Hombre.
+                        <%}else if(usuario.genero === "mujer"){%>
+                        Mujer.
                         <%}%>
                     </p>
                     <p>
-                        <%= usuario.fechaNacimiento %>
+                        <%= usuario.fechaNacimiento %>.
                     </p>
                     <p>
-                        <%= usuario.puntos %>
+                        <%= usuario.puntos %> puntos.
                     </p>
 
                 </div>
             </div>
-            <div class="botonModif">Botón modificar</div>
+            <button class="botonModif">Modificar</button>
         </div>
     </div>
 
