@@ -14,11 +14,11 @@
 
     <div id="containerGeneral">
         <h1 class="tituloRegistro">Nuevo usuario</h1>
-        
+
         <form method="post" action="registro" class="panelRegistro">
-            <div class= "campoRegistro">Email:<input class="campoEscribir" type="text" name="email"></div>
-            <div class= "campoRegistro">Contraseña:<input class="campoEscribir" type="password" name="password"></div>
-            <div class= "campoRegistro">Nombre: <input class="campoEscribir" type="text" name="nombre"></div>
+            <div class="campoRegistro">Email:<input class="campoEscribir" type="email" name="email" required></div>
+            <div class="campoRegistro">Contraseña:<input class="campoEscribir" type="password" name="password"></div>
+            <div class="campoRegistro">Nombre: <input class="campoEscribir" type="text" name="nombre" required></div>
             <div class="botonesGenero">
                 Sexo:
                 <input type="radio" name="genero" value="hombre" id="formHombre">
@@ -29,11 +29,15 @@
                 <label for="formOtro">Otro</label>
             </div>
 
-            <div class= "campoRegistro">Fecha de nacimiento(dd/mm/aaaa): <input class="campoEscribir" type="date" name="fechaNacimiento" placeholder="dd/mm/aaaa"></div>
-            <div class= "campoRegistro">Imagen de Perfil: <input class="campoEscribir" type="text" name="imagen"></div>
+            <div class="campoRegistro">Fecha de nacimiento(dd/mm/aaaa): <input class="campoEscribir" type="date" name="fechaNacimiento"
+                    placeholder="dd/mm/aaaa"></div>
+            <div class="campoRegistro">Imagen de Perfil: <input class="campoEscribir" type="text" name="imagen"></div>
+            
+            <% let msg = getAndClearFlash();
+            if(msg){%> <p class="flash"> <%= msg %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
+            
             <input type="submit" name="Aceptar" class="botonRegistro">
         </form>
-
 
     </div>
 

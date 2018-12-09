@@ -45,7 +45,7 @@
 .botonRegistro {
 	width:200px;
 	height: 50px;
-	margin-top: 40px;
+	margin-top: 10px;
 	margin-left: auto;
 	margin-right: auto;
 	cursor: pointer;
@@ -56,3 +56,13 @@
 .botonRegistro:hover{
 	background-color: grey;
 }
+
+.flash{
+	text-align: center;
+	color: red;
+	font-size: 130%;
+    font-weight: bold;
+    margin-top:1%;
+	margin-bottom: 1%;
+}
+	

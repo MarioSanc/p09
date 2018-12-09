@@ -151,13 +151,13 @@ app.get("/desconectar", (request, response) => {
 
 app.get("/registro", (request, response) => {
     response.status(200);
-    response.render("registro", { errores: null });
+    response.render("registro", { errores: [] });
 });
 
 app.post("/registro", function (request, response) {
-    request.checkBody("nombre", "Nombre de usuario vacío").notEmpty();
-    request.checkBody("email", "Dirección de correo no válida").isEmail();
 
+    request.checkBody("fechaNacimiento","Fecha de nacimiento no válida.").isBefore();
+    
     request.getValidationResult().then(result => {
 
         if (result.isEmpty()) {
@@ -185,9 +185,8 @@ app.post("/registro", function (request, response) {
                 }
             });
         } else {
-            console.log(result.length);
-            response.render("registro", { errores: result.mapped() });
-            response.end();
+            response.setFlash("La fecha de nacimiento debe ser anterior a la actual.");
+            response.redirect("registro");
         }
     });
 
