@@ -10,9 +10,7 @@ const morgan = require("morgan");
 const expressValidator = require('express-validator');
 //daos
 const DAOUsers = require("./DAOUsers");
-//const morgan = require("morgan"); 
-//const multer = require("multer");
-//const multerFactory = multer();
+const multer = require("multer");
 let moment = require("moment");
 moment.locale('es');
 
@@ -31,7 +29,7 @@ const pool = mysql.createPool(config.mysqlConfig);
 const daoUsuarios = new DAOUsers(pool);
 const daoF = new DAOFriends(pool);
 const daoPR = new DAOPreguntasRespuestas(pool);
-
+const multerFactory = multer({ storage: multer.memoryStorage() });
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "public", "views"));
 
@@ -42,19 +40,6 @@ const middlewareSession = session({
     saveUninitialized: false,
     secret: "foobar34", resave: false, store: sessionStore
 });
-
-
-function flashMiddleware(request, response, next) {
-    response.setFlash = function (msg) {
-        request.session.flashMsg = msg;
-    };
-    response.locals.getAndClearFlash = function () {
-        let msg = request.session.flashMsg;
-        delete request.session.flashMsg;
-        return msg;
-    };
-    next();
-};
 
 // La variable ficherosEstaticos guarda el 
 // nombre del directorio donde se encuentran 
@@ -83,11 +68,36 @@ function middleware_acceso(request, response, next) {
     if (request.session.currentUser != undefined) {
         response.locals.userEmail = request.session.currentUser;
         response.locals.currentUserId = request.session.currentUserId;
+        response.locals.currentUserPoints = request.session.currentUserPoints;
         next();  // Saltar al siguiente middleware
     } else {
         response.redirect("/login");
     }
 }
+
+function middleware_logeado(request, response, next) {
+    if (request.session.currentUser != undefined) {
+        response.locals.userEmail = request.session.currentUser;
+        response.locals.currentUserId = request.session.currentUserId;
+        response.locals.currentUserPoints = request.session.currentUserPoints;
+        response.redirect("/perfil");
+    } else {
+        next();
+    }
+}
+
+
+function flashMiddleware(request, response, next) {
+    response.setFlash = function (msg) {
+        request.session.flashMsg = msg;
+    };
+    response.locals.getAndClearFlash = function () {
+        let msg = request.session.flashMsg;
+        delete request.session.flashMsg;
+        return msg;
+    };
+    next();
+};
 
 // Arrancar el servidor
 app.listen(config.port, function (err) {
@@ -100,19 +110,19 @@ app.listen(config.port, function (err) {
     }
 });
 
-app.get("/", function (request, response) {
+app.get("/", middleware_logeado, function (request, response) {
     response.redirect("/login");
 });
 
 
-app.get("/login", function (request, response) {
+app.get("/login", middleware_logeado, function (request, response) {
     response.statusCode = 200;
     response.render("login", { mensaje: null });
 });
 
 app.post("/login", function (request, response) {
     response.statusCode = 200;
-    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result, id_usuario) {
+    daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result, usuario) {
         if (err) {
             response.status(500);
             console.log(err.message);
@@ -120,7 +130,8 @@ app.post("/login", function (request, response) {
         } else if (result) {
             console.log("Usuario y contraseña correctos");
             request.session.currentUser = request.body.correo;
-            request.session.currentUserId = id_usuario;
+            request.session.currentUserId = usuario.id;
+            request.session.currentUserPoints = usuario.puntos;
             response.redirect("/perfil");
         } else {
             console.log("Usuario y/o contraseña incorrectos");
@@ -130,41 +141,48 @@ app.post("/login", function (request, response) {
     });
 });
 
-app.get("/perfil", function (request, response) {
+app.get("/perfil", middleware_acceso, function (request, response) {
     daoUsuarios.getUser(request.session.currentUser, (err, result) => {
         if (err) {
             response.status(500);
             console.log(err.message);
             response.end(err.message);
         }
-        else { 
-            result.fechaNacimiento = moment().diff(result.fechaNacimiento,'years');
-            response.render("perfil", { usuario: result });//Hay que pasar la imagen también.
+        else {
+            result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
+            response.render("perfil", { usuario: result });
         }
     });
 });
 
-app.get("/desconectar", (request, response) => {
+app.get("/desconectar", middleware_acceso, (request, response) => {
     response.status(300);
     request.session.destroy();
     response.redirect("/login");
     response.end();
 });
 
-app.get("/imagen/:id", function(request, response) {
-    let pathImg = path.join(__dirname, "uploads", request.params.id);
-    response.sendFile(pathImg);
-    });
+app.get("/imagen/:id", function (request, response) {
 
-app.get("/registro", (request, response) => {
+    daoUsuarios.getUserImageName(request.session.currentUser, function (err, imagen) {
+        if (imagen) {
+            response.end(imagen);
+        } else {
+            response.status(404);
+            response.end("Not found");
+        }
+    });
+});
+
+app.get("/registro", middleware_logeado, (request, response) => {
     response.status(200);
     response.render("registro", { errores: [] });
 });
 
-app.post("/registro", function (request, response) {
+app.post("/registro", multerFactory.single("foto"), function (request, response) {
 
-    request.checkBody("fechaNacimiento","Fecha de nacimiento no válida.").isBefore();
-    
+    request.checkBody("fechaNacimiento", "Fecha de nacimiento no válida.").isBefore();
+
     request.getValidationResult().then(result => {
 
         if (result.isEmpty()) {
@@ -176,7 +194,10 @@ app.post("/registro", function (request, response) {
             datos.nombre = request.body.nombre;
             datos.genero = request.body.genero;
             datos.fechaNacimiento = request.body.fechaNacimiento;
-            datos.imagen = request.body.imagen;
+            datos.imagen = null;
+            if (request.file /*&& request.file.type.indexOf('image') !== -1*/) {
+                datos.imagen = request.file.buffer;
+            }
 
             daoUsuarios.newUser(datos, (error, res) => {
                 if (error) {

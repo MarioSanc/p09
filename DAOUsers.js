@@ -27,7 +27,7 @@ class DAOUsers {
                         }
                         else {
                             if (resultado.length === 1)
-                                callback(null, true, resultado[0].id);
+                                callback(null, true, resultado[0]);
                             else
                                 callback(null, false);
                         }
@@ -59,7 +59,7 @@ class DAOUsers {
 
                                 callback(err_);
                             } else
-                                callback(null, resultado[0].img);
+                                callback(null, resultado[0].imagen);
                         }
                     })
             }
