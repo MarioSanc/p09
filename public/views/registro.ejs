@@ -15,7 +15,7 @@
     <div id="containerGeneral">
         <h1 class="tituloRegistro">Nuevo usuario</h1>
 
-        <form method="post" action="registro" class="panelRegistro">
+        <form method="post" action="registro" class="panelRegistro" enctype="multipart/form-data">
             <div class="campoRegistro">Email:<input class="campoEscribir" type="email" name="email" required></div>
             <div class="campoRegistro">Contraseña:<input class="campoEscribir" type="password" name="password"></div>
             <div class="campoRegistro">Nombre: <input class="campoEscribir" type="text" name="nombre" required></div>
@@ -30,8 +30,10 @@
             </div>
 
             <div class="campoRegistro">Fecha de nacimiento(dd/mm/aaaa): <input class="campoEscribir" type="date" name="fechaNacimiento"
-                    placeholder="dd/mm/aaaa"></div>
-            <div class="campoRegistro">Imagen de Perfil: <input type="file" name="foto"></div>
+                    placeholder="dd/mm/aaaa" min="1900-01-01"></div>
+            <div class="campoRegistro">Imagen de Perfil: <input type="file" name="foto">
+            <p class="avisoImagen">Solo imagenes inferiores a 300KB.</p>
+            </div>
             
             <% let msg = getAndClearFlash();
             if(msg){%> <p class="flash"> <%= msg %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>

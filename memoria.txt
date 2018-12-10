@@ -31,6 +31,13 @@ npm install express-mysql-session --save
 npm install multer --save 
 
 
+---Tamaño archivos en BD ----
+TINYBLOB: 256 bytes.
+BLOB: 65 kilobytes.
+MEDIUMBLOB: 16 megabytes. --->Este elegimos.
+LONGBLOB : 4 gigabytes.
+-----------------------------
+
 
 
 

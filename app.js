@@ -195,8 +195,12 @@ app.post("/registro", multerFactory.single("foto"), function (request, response)
             datos.genero = request.body.genero;
             datos.fechaNacimiento = request.body.fechaNacimiento;
             datos.imagen = null;
-            if (request.file /*&& request.file.type.indexOf('image') !== -1*/) {
-                datos.imagen = request.file.buffer;
+
+            if (request.file){
+                if( (request.file.size/1024) < 300){
+                    if( request.file.mimetype.split('/')[0] === 'image')
+                         datos.imagen = request.file.buffer;
+                }
             }
 
             daoUsuarios.newUser(datos, (error, res) => {

@@ -107,7 +107,7 @@ class DAOUsers {
                         connecction.release();
                         if (err){
                             callback(err);
-                            return;
+                            return; 
                         }
                         else {
                             console.log(resultado.insertId);

@@ -19,11 +19,10 @@
                 <div>
                     <% if(usuario.imagen){ %>
                     <tr>
-                        <td>Foto:</td>
-                        <td><img src="/imagen/<%= imagen %>"></td>
+                        <td><img class="imagenPerfil" src="/imagen/<%= usuario.imagen %>"></td>
                     </tr>
                     <%}else{%>
-                    <img src="../img/userImg.png" alt="Imagen de usuario." width="200" height="200">
+                    <img class = "imagenPerfil" src="../img/userImg.png" alt="Imagen de usuario.">
                     <%}%>
 
                 </div>

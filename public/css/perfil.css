@@ -17,10 +17,17 @@
     min-width: 500px;
     justify-content: space-between;
 }
+
 .imagenDatos{
     margin: 50px;
-    display:flex;
+	display:flex;
     flex-direction: row;
+}
+.imagenPerfil{
+	max-width: 200px;
+	max-height: 200px;
+	min-width: 200px;
+	min-height: 200px;
 }
 .datos{
     margin-left: 40px;
@@ -45,4 +52,5 @@
 .botonModif:hover{
 	background-color: grey;
 }
+
 
