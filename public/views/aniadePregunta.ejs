@@ -10,30 +10,30 @@
         <%- include('./header'); %>
         <h1 class="tituloAddPreguntas">Añadir Pregunta</h1>
         <div class="panelAddPreguntas">
-        <form action="/nuevaPregunta" method="POST">
+                <form action="/nuevaPregunta" method="POST">
 
-            <div>
-                    <label   class="label">Titulo de la nueva pregunta: </label>
-            </div>
-          
-            <input id="titulo" type="text" name="la_pregunta">
+                        <div>
+                                <label class="label">Titulo de la nueva pregunta: </label>
+                        </div>
+
+                        <input id="titulo" type="text" name="la_pregunta">
 
 
-            <div id="lasRespuestas">
-                    <label class="label"> Respuestas: </label>
+                        <div id="lasRespuestas">
+                                <label class="label"> Respuestas: </label>
 
-                    <div>
-                            <textarea id="textarea" maxlength="300" name="respuestas" placeholder="Escribe aquí las respuestas, una en cada línea (max: 300 caracteres)."></textarea>
-                    </div>
-                
-                
-            </div>
+                                <div>
+                                        <textarea id="textarea" maxlength="300" name="respuestas" placeholder="Escribe aquí las respuestas, una en cada línea (max: 300 caracteres)."></textarea>
+                                </div>
 
-         <input type="submit" value="Añadir" class="botonAdd">
-                
-            
-        </form>
-    </div>
+
+                        </div>
+
+                        <input type="submit" value="Añadir" class="botonAdd">
+
+
+                </form>
+        </div>
 
 </body>
 

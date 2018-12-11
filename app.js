@@ -228,15 +228,21 @@ app.get("/desconectar", middleware_acceso, (request, response) => {
 });
 
 app.get("/imagen/:id", function (request, response) {
+    let n = request.params.id;
+    if (isNaN(n)) {
+        response.status(400);
+        response.end("Peticion incorrecta");
 
-    daoUsuarios.getUserImageName(request.session.currentUserId, function (err, imagen) {
-        if (imagen) {
-            response.end(imagen);
-        } else {
-            response.status(404);
-            response.end("Not found");
-        }
-    });
+    } else {
+        daoUsuarios.getUserImageName(request.session.currentUserId, function (err, imagen) {
+            if (imagen) {
+                response.end(imagen);
+            } else {
+                response.status(404);
+                response.end("Not found");
+            }
+        });
+    }
 });
 
 app.get("/registro", middleware_logeado, (request, response) => {

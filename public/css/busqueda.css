@@ -55,3 +55,12 @@
 .botonSolicitar:hover{
 	background-color: grey;
 }
+
+.imagen_pequenia{
+    max-width: 40px;
+	max-height: 40px;
+	min-width: 40px;
+	min-height: 40px;
+    margin-top: 7px;
+    margin-right: 10px;
+}

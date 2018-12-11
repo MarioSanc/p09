@@ -11,24 +11,30 @@
 
 <body>
     <%- include('./header'); %>
-        <h1 class="tituloLogin">Inicio de sesión</h1>
-        <form action="/login" method="POST" class="panelLogin">
-             <div class = "mail">
-                 <p class="nombreCamposLogin"> Correo:</p> 
-                 <input type="email" value="" name="correo" class="textoLogin"><br>
-            </div>
-             <div class = "clave">
-                <p class="nombreCamposLogin"> Contraseña:</p> 
-                 <input type="password" name="password" value="" class = "textoLogin"><br>
-            </div>
+    <h1 class="tituloLogin">Inicio de sesión</h1>
+    <form action="/login" method="POST" class="panelLogin">
+        <div class="mail">
+            <p class="nombreCamposLogin"> Correo:</p>
+            <input type="email" value="" name="correo" class="textoLogin"><br>
+        </div>
+        <div class="clave">
+            <p class="nombreCamposLogin"> Contraseña:</p>
+            <input type="password" name="password" value="" class="textoLogin"><br>
+        </div>
 
-            <% let msg = getAndClearFlash();
-            if(msg){%> <p class="flash"> <%= msg %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
+        <% let msg = getAndClearFlash();
+            if(msg){%>
+        <p class="flash">
+            <%= msg %>
+        </p>
+        <%}else {%>
+        <p class="flash"> &nbsp </p>
+        <%}%>
 
-            <input type="submit" value="Aceptar" class="botonLogin">
+        <input type="submit" value="Aceptar" class="botonLogin">
 
-         </form>
-    
+    </form>
+
 
 </body>
 

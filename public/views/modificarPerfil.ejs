@@ -12,43 +12,53 @@
 <body>
     <%- include('./header'); %>
 
-        <h1 class="tituloRegistro">Modificar perfil</h1>
+    <h1 class="tituloRegistro">Modificar perfil</h1>
 
-        <form method="post" action="modificarPerfil" class="panelRegistro" enctype="multipart/form-data">
-            <div class="campoRegistro">Email:<input class="campoEscribir" type="email" name="email" value="<%=usuario.email%>" required></div>
-            <div class="campoRegistro">Contraseña:<input class="campoEscribir" type="password" value="<%=usuario.password%>" name="password"></div>
-            <div class="campoRegistro">Nombre: <input class="campoEscribir" type="text" value="<%=usuario.nombre%>" name="nombre" required></div>
-            <div class="botonesGenero">
-                Sexo:
-                <%if(usuario.genero === "hombre"){%>
-                <input type="radio" name="genero" value="hombre" id="formHombre" checked>
-                <%}else{%> <input type="radio" name="genero" value="hombre" id="formHombre">
-                <%}%>
-                <label for="formHombre">Hombre</label>
-                <%if(usuario.genero === "mujer"){%>
-                <input type="radio" name="genero" value="mujer" id="formMujer" checked>
-                <%}else{%> <input type="radio" name="genero" value="mujer" id="formMujer">
-                <%}%>
-                <label for="formMujer">Mujer</label>
-                <%if(usuario.genero === "otro"){%>
-                <input type="radio" name="genero" value="otro" id="formOtro" checked>
-                <%}else{%><input type="radio" name="genero" value="otro" id="formOtro">
-                <%}%>
-                <label for="formOtro">Otro</label>
-            </div>
+    <form method="post" action="modificarPerfil" class="panelRegistro" enctype="multipart/form-data">
+        <div class="campoRegistro">Email:<input class="campoEscribir" type="email" name="email" value="<%=usuario.email%>"
+                required></div>
+        <div class="campoRegistro">Contraseña:<input class="campoEscribir" type="password" value="<%=usuario.password%>"
+                name="password"></div>
+        <div class="campoRegistro">Nombre: <input class="campoEscribir" type="text" value="<%=usuario.nombre%>" name="nombre"
+                required></div>
+        <div class="botonesGenero">
+            Sexo:
+            <%if(usuario.genero === "hombre"){%>
+            <input type="radio" name="genero" value="hombre" id="formHombre" checked>
+            <%}else{%> <input type="radio" name="genero" value="hombre" id="formHombre">
+            <%}%>
+            <label for="formHombre">Hombre</label>
+            <%if(usuario.genero === "mujer"){%>
+            <input type="radio" name="genero" value="mujer" id="formMujer" checked>
+            <%}else{%> <input type="radio" name="genero" value="mujer" id="formMujer">
+            <%}%>
+            <label for="formMujer">Mujer</label>
+            <%if(usuario.genero === "otro"){%>
+            <input type="radio" name="genero" value="otro" id="formOtro" checked>
+            <%}else{%><input type="radio" name="genero" value="otro" id="formOtro">
+            <%}%>
+            <label for="formOtro">Otro</label>
+        </div>
 
-            <div class="campoRegistro">
-                Fecha de nacimiento(dd/mm/aaaa): <input class="campoEscribir" type="date" name="fechaNacimiento" value="<%=usuario.fechaNacimiento%>" placeholder="dd/mm/aaaa" min="1900-01-01">
-            </div>
-            <div class="campoRegistro">Imagen de Perfil: <input type="file" name="foto" value="/imagen/<%= usuario.id %>">
+        <div class="campoRegistro">
+            Fecha de nacimiento(dd/mm/aaaa): <input class="campoEscribir" type="date" name="fechaNacimiento" value="<%=usuario.fechaNacimiento%>"
+                placeholder="dd/mm/aaaa" min="1900-01-01">
+        </div>
+        <div class="campoRegistro">Imagen de Perfil: <input type="file" name="foto" value="/imagen/<%= usuario.id %>">
             <p class="avisoImagen">Solo imagenes inferiores a 300KB.</p>
-            </div>
-            
-            <% let msg = getAndClearFlash();
-            if(msg){%> <p class="flash"> <%= msg %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
+        </div>
 
-            <input type="submit" name="Aceptar" class="botonRegistro">
-        </form>
+        <% let msg = getAndClearFlash();
+            if(msg){%>
+        <p class="flash">
+            <%= msg %>
+        </p>
+        <%}else {%>
+        <p class="flash"> &nbsp </p>
+        <%}%>
+
+        <input type="submit" name="Aceptar" class="botonRegistro">
+    </form>
 
 </body>
 

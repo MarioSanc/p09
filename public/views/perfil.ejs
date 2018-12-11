@@ -12,43 +12,43 @@
 <body>
     <%- include('./header'); %>
 
-        <h1 class="tituloPerfil">Tu perfil</h1>
-        <div class="panelPerfil">
-            <div class="imagenDatos">
-                <div>
-                    <% if(usuario.imagen){ %>
-                    <tr>
-                        <td><img class="imagenPerfil" src="/imagen/<%= usuario.id %>"></td>
-                    </tr>
-                    <%}else{%>
-                    <img class = "imagenPerfil" src="../img/userImg.png" alt="Imagen de usuario.">
-                    <%}%>
+    <h1 class="tituloPerfil">Tu perfil</h1>
+    <div class="panelPerfil">
+        <div class="imagenDatos">
+            <div>
+                <% if(usuario.imagen){ %>
+                <tr>
+                    <td><img class="imagenPerfil" src="/imagen/<%= usuario.id %>"></td>
+                </tr>
+                <%}else{%>
+                <img class="imagenPerfil" src="../img/userImg.png" alt="Imagen de usuario.">
+                <%}%>
 
-                </div>
-                <div class="datos">
-                    <p>
-                        <%= usuario.nombre %>
-                    </p>
-                    <p> 
-                            <%= usuario.fechaNacimiento %>  años.
-                        </p>
-                    <p>
-                        <% if(usuario.genero === "hombre"){ %>
-                        Hombre.
-                        <%}else if(usuario.genero === "mujer"){%>
-                        Mujer.
-                        <%}%>
-                    </p>
-                    <p>
-                        <%= usuario.puntos %> puntos.
-                    </p>
-
-                </div>
             </div>
-            <a href="/modificarPerfil" class= "enlaceBotonModif">
-            <button class="botonModif" >Modificar</button>
-            </a>
+            <div class="datos">
+                <p>
+                    <%= usuario.nombre %>
+                </p>
+                <p>
+                    <%= usuario.fechaNacimiento %> años.
+                </p>
+                <p>
+                    <% if(usuario.genero === "hombre"){ %>
+                    Hombre.
+                    <%}else if(usuario.genero === "mujer"){%>
+                    Mujer.
+                    <%}%>
+                </p>
+                <p>
+                    <%= usuario.puntos %> puntos.
+                </p>
+
+            </div>
         </div>
+        <a href="/modificarPerfil" class="enlaceBotonModif">
+            <button class="botonModif">Modificar</button>
+        </a>
+    </div>
 
 </body>
 

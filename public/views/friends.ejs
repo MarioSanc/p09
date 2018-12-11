@@ -8,34 +8,40 @@
 </head>
 
 <body>
-		<%- include('./header'); %>
-		<h1 class="tituloAmigos">Amigos</h1>
+	<%- include('./header'); %>
+	<h1 class="tituloAmigos">Amigos</h1>
 	<div id="container_general">
 		<%if(lista_solicitudes[0]){%>
 		<div id="solucitudes" class="contenedor_centrado">
-			<div >
+			<div>
 				<h1>Solicitudes de amistad:</h1>
 			</div>
 
 			<div id="las_solicitudes">
 				<% lista_solicitudes.forEach(solicitud => {  %>
 				<div class="una_solicitud">
-					<div class="imagen_pequenia"></div>
+					<div>
+						<% if(solicitud.imagen){%>
+						<img class="imagen_pequenia" src="/imagen/<%= solicitud.id %>">
+						<%}else{%>
+						<img class="imagen_pequenia" src="../img/userImg.png" alt="Imagen de usuario.">
+						<%}%>
+					</div>
 					<p id="nombreSolicitud">
 						<%=solicitud.nombre%>
 					</p>
 
 
-					
-						<form method="POST" action="/aceptarSolicitudAmistad">
-							<input type="hidden" name="id_amigo" value="<%=solicitud.id_usuario_A%>" >
-							<input class="botonAceptar" value="Añadir" type="submit">
-						</form>
-						<form method="POST" action="/rechazarSolicitudAmistad">
-							<input type="hidden" name="id_amigo" value="<%=solicitud.id_usuario_A%> ">
-							<input class="botonRechazar"   value="Rechazar" type="submit">
-						</form>
-					
+
+					<form method="POST" action="/aceptarSolicitudAmistad">
+						<input type="hidden" name="id_amigo" value="<%=solicitud.id_usuario_A%>">
+						<input class="botonAceptar" value="Añadir" type="submit">
+					</form>
+					<form method="POST" action="/rechazarSolicitudAmistad">
+						<input type="hidden" name="id_amigo" value="<%=solicitud.id_usuario_A%> ">
+						<input class="botonRechazar" value="Rechazar" type="submit">
+					</form>
+
 
 				</div>
 				<%})%>
@@ -45,7 +51,7 @@
 		</div>
 		<%}%>
 		<div id="busqueda" class="contenedor_centrado">
-			<div >
+			<div>
 				<h1>Búsqueda de usuarios:</h1>
 			</div>
 			<div id="la_busqueda">
@@ -56,14 +62,10 @@
 				</form>
 			</div>
 
-
-
-
-
 		</div>
 		<%if(lista_amigos[0]){%>
 		<div id="amigos" class="contenedor_centrado">
-			<div >
+			<div>
 				<h1>Mis amigos:</h1>
 			</div>
 
