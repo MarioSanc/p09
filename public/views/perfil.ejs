@@ -3,9 +3,8 @@
 
 <head>
 
-    <link rel="stylesheet" type="text/css" href="css/perfil.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/css/perfil.css" media="screen">
     <link rel="shortcut icon" href="../img/icon.png">
-
     <title>Perfil - FaceBluff</title>
 </head>
 
@@ -45,9 +44,11 @@
 
             </div>
         </div>
+        <%if(locals.currentUserId === usuario.id){%>
         <a href="/modificarPerfil" class="enlaceBotonModif">
             <button class="botonModif">Modificar</button>
         </a>
+        <%}%>
     </div>
 
 </body>

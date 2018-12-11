@@ -85,6 +85,16 @@
 #container_general p,label{
     font-size: 20px;
 }
+#container_general a{
+    font-size: 20px;
+    text-decoration: none;
+    color: inherit;
+}
+#container_general a:hover{
+    font-size: 20px;
+    text-decoration: none;
+    color: grey;
+}
 #container_general h1{
     margin-bottom: 10px;
     margin-top: 10px;

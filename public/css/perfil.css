@@ -7,10 +7,11 @@
     display:flex;
 	flex-direction: column;
 	align-self: center;
+	flex: grow;
 	margin-left: auto;
 	margin-right: auto;
 	background-image: url("../img/morado.jpg");
-	min-height: 400px;
+	min-height: 300px;
 	width: 40%;
 	border: black solid;
 	border-radius: 10px;

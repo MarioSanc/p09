@@ -66,7 +66,7 @@ class DAOUsers {
         });
     }
 
-    getUser(email, callback) {
+    getUser(id, callback) {
         let err_;
         this.mypool.getConnection(function (err, connecction) {
             if (err) {
@@ -74,8 +74,8 @@ class DAOUsers {
                 callback(err_);
             }
             else {
-                connecction.query("select * from usuario where email = ?",
-                    [email], function (err, resultado) {
+                connecction.query("select * from usuario where id = ?",
+                    [id], function (err, resultado) {
                         connecction.release();
                         if (err) {
                             err_ = new Error("Fallo en la query " + err);

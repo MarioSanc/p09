@@ -27,11 +27,7 @@
 						<img class="imagen_pequenia" src="../img/userImg.png" alt="Imagen de usuario.">
 						<%}%>
 					</div>
-					<p id="nombreSolicitud">
-						<%=solicitud.nombre%>
-					</p>
-
-
+						<a id="nombreSolicitud" href="/perfil/<%= solicitud.id_usuario_A %>"><%=solicitud.nombre%></a>
 
 					<form method="POST" action="/aceptarSolicitudAmistad">
 						<input type="hidden" name="id_amigo" value="<%=solicitud.id_usuario_A%>">
@@ -80,9 +76,11 @@
 						<img class="imagen_pequenia" src="../img/userImg.png" alt="Imagen de usuario.">
 						<%}%>
 					</div>
-					<p>
+
+					<a href="/perfil/<%= amigo.id %>">
 						<%=amigo.nombre%>
-					</p>
+					</a>
+
 				</div>
 				<%})%>
 

@@ -145,7 +145,7 @@ app.post("/login", function (request, response) {
 });
 
 app.get("/perfil", middleware_acceso, function (request, response) {
-    daoUsuarios.getUser(request.session.currentUser, (err, result) => {
+    daoUsuarios.getUser(request.session.currentUserId, (err, result) => {
         if (err) {
             response.status(500);
             console.log(err.message);
@@ -158,8 +158,10 @@ app.get("/perfil", middleware_acceso, function (request, response) {
     });
 });
 
+
+
 app.get("/modificarPerfil", middleware_acceso, (request, response) => {
-    daoUsuarios.getUser(request.session.currentUser, (err, result) => {
+    daoUsuarios.getUser(request.session.currentUserId, (err, result) => {
         if (err) {
             response.status(500);
             console.log(err.message);
@@ -225,6 +227,28 @@ app.get("/desconectar", middleware_acceso, (request, response) => {
     request.session.destroy();
     response.redirect("/login");
     response.end();
+});
+
+app.get("/perfil/:id", middleware_acceso, function (request, response) {
+    let n = request.params.id;
+    if (isNaN(n)) {
+        response.status(400);
+        response.end("Peticion incorrecta");
+    }
+    else {
+        daoUsuarios.getUser(n, (err, result) => {
+            if (err) {
+                response.status(500);
+                console.log(err.message);
+                response.end(err.message);
+            }
+            else {
+                result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
+                response.render("perfil", { usuario: result });
+                response.end();
+            }
+        });
+    }
 });
 
 app.get("/imagen/:id", function (request, response) {
