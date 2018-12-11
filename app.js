@@ -69,6 +69,7 @@ function middleware_acceso(request, response, next) {
         response.locals.userEmail = request.session.currentUser;
         response.locals.currentUserId = request.session.currentUserId;
         response.locals.currentUserPoints = request.session.currentUserPoints;
+        response.locals.currentUserImage = request.session.currentUserImage;
         next();  // Saltar al siguiente middleware
     } else {
         response.redirect("/login");
@@ -80,6 +81,7 @@ function middleware_logeado(request, response, next) {
         response.locals.userEmail = request.session.currentUser;
         response.locals.currentUserId = request.session.currentUserId;
         response.locals.currentUserPoints = request.session.currentUserPoints;
+        response.locals.currentUserImage = request.session.currentUserImage;
         response.redirect("/perfil");
     } else {
         next();
@@ -132,6 +134,7 @@ app.post("/login", function (request, response) {
             request.session.currentUser = request.body.correo;
             request.session.currentUserId = usuario.id;
             request.session.currentUserPoints = usuario.puntos;
+            request.session.currentUserImage = usuario.imagen == null ? false:true;
             response.redirect("/perfil");
         } else {
             console.log("Usuario y/o contraseña incorrectos");
@@ -155,6 +158,74 @@ app.get("/perfil", middleware_acceso, function (request, response) {
     });
 });
 
+app.get("/modificarPerfil", middleware_acceso, (request, response) => {
+    daoUsuarios.getUser(request.session.currentUser, (err, result) => {
+        if (err) {
+            response.status(500);
+            console.log(err.message);
+            response.end(err.message);
+        }
+        else {
+            response.status(200);
+            let año= result.fechaNacimiento.getFullYear();
+            let dia = result.fechaNacimiento.getDay();
+            if(dia < 10) dia = "0"+dia;
+            let mes= result.fechaNacimiento.getMonth();
+            if(mes < 10) mes = "0"+mes;
+            result.fechaNacimiento = año + "-" + mes + "-" + dia;
+            response.render("modificarPerfil", { usuario: result });
+        }
+    });
+});
+
+app.post("/modificarPerfil",multerFactory.single("foto"), middleware_acceso, (request, response) => {
+    request.checkBody("fechaNacimiento", "Fecha de nacimiento no válida.").isBefore();
+
+    request.getValidationResult().then(result => {
+
+        if (result.isEmpty()) {
+
+            let datos = new Object();
+
+            datos.id = request.session.currentUserId;
+            datos.email = request.body.email;
+            datos.password = request.body.password;
+            datos.nombre = request.body.nombre;
+            datos.genero = request.body.genero;
+            datos.fechaNacimiento = request.body.fechaNacimiento;
+            datos.imagen = null;
+
+            //Se ha incluido un fichero, pesa menos de 300KB y es de tipo imagen.
+            if (request.file && (request.file.size/1024) < 300 && request.file.mimetype.split('/')[0] === 'image'){
+                datos.imagen = request.file.buffer;
+            }
+            else{//Se busca si tenía imagen el usuario
+                daoUsuarios.getUserImageName(request.session.currentUserId, function (err, imagen) {
+                    if (imagen) 
+                        datos.imagen = imagen;
+                });
+            }
+
+            daoUsuarios.updateUser(datos, (error, res) => {
+                if (error) {
+                    if (error.errno === 1062) {
+                        response.setFlash("El email introducido ya está en uso.");
+                        response.redirect("modificarPerfil");
+                    } else console.log(error.message);
+                    response.end();
+                }
+                else {
+                    response.redirect("perfil");
+                    response.end();
+                }
+            });
+        } else {
+            response.setFlash("La fecha de nacimiento debe ser anterior a la actual.");
+            response.redirect("modificarPerfil");
+        }
+    });
+});
+
 app.get("/desconectar", middleware_acceso, (request, response) => {
     response.status(300);
     request.session.destroy();
@@ -164,7 +235,7 @@ app.get("/desconectar", middleware_acceso, (request, response) => {
 
 app.get("/imagen/:id", function (request, response) {
 
-    daoUsuarios.getUserImageName(request.session.currentUser, function (err, imagen) {
+    daoUsuarios.getUserImageName(request.session.currentUserId, function (err, imagen) {
         if (imagen) {
             response.end(imagen);
         } else {
@@ -176,7 +247,7 @@ app.get("/imagen/:id", function (request, response) {
 
 app.get("/registro", middleware_logeado, (request, response) => {
     response.status(200);
-    response.render("registro", { errores: [] });
+    response.render("registro");
 });
 
 app.post("/registro", multerFactory.single("foto"), function (request, response) {
@@ -196,13 +267,10 @@ app.post("/registro", multerFactory.single("foto"), function (request, response)
             datos.fechaNacimiento = request.body.fechaNacimiento;
             datos.imagen = null;
 
-            if (request.file){
-                if( (request.file.size/1024) < 300){
-                    if( request.file.mimetype.split('/')[0] === 'image')
-                         datos.imagen = request.file.buffer;
-                }
-            }
-
+            //Se ha incluido un fichero, pesa menos de 300KB y es de tipo imagen.
+            if (request.file && (request.file.size/1024) < 300 && request.file.mimetype.split('/')[0] === 'image')
+                datos.imagen = request.file.buffer;
+            
             daoUsuarios.newUser(datos, (error, res) => {
                 if (error) {
                     if (error.errno === 1062) {

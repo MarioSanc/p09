@@ -20,8 +20,7 @@ body{
 }
 .navbar{
 	background-color:black;
-	height: 40px;
-	padding-top: 10px;	
+	height: 45px;	
 }
 
 .navbarList{
@@ -29,17 +28,28 @@ body{
 	flex-direction: row;
 	list-style: none;
 	justify-content: space-evenly;
-
 }
 
 .navLink{
 	color:white;
+	display: inline-block;
 	text-decoration: none;
 	margin-left: 20px;
-	font-size: 20px;
+	margin-top: 2px;
+	font-size: 25px;
 	font-family: 'Mali', cursive;
 }
 
 .navLink:hover{
 	color:grey;
+}
+.icon_puntos{
+	display:flex;
+}
+.perfilIcon{
+	max-width: 40px;
+	max-height: 40px;
+	min-width: 40px;
+	min-height: 40px;
+	margin-top: 2px;
 }

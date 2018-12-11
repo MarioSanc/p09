@@ -19,7 +19,7 @@
                 <div>
                     <% if(usuario.imagen){ %>
                     <tr>
-                        <td><img class="imagenPerfil" src="/imagen/<%= usuario.imagen %>"></td>
+                        <td><img class="imagenPerfil" src="/imagen/<%= usuario.id %>"></td>
                     </tr>
                     <%}else{%>
                     <img class = "imagenPerfil" src="../img/userImg.png" alt="Imagen de usuario.">
@@ -46,7 +46,9 @@
 
                 </div>
             </div>
-            <button class="botonModif">Modificar</button>
+            <a href="/modificarPerfil" class= "enlaceBotonModif">
+            <button class="botonModif" >Modificar</button>
+            </a>
         </div>
     </div>
 

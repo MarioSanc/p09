@@ -37,7 +37,7 @@ class DAOUsers {
     }
 
 
-    getUserImageName(email, callback) {
+    getUserImageName(id, callback) {
         let err_;
         this.mypool.getConnection(function (err, connecction) {
             if (err) {
@@ -45,8 +45,8 @@ class DAOUsers {
                 callback(err_);
             }
             else {
-                connecction.query("select imagen from usuario where email = ?",
-                    [email], function (err, resultado) {
+                connecction.query("select imagen from usuario where id = ?",
+                    [id], function (err, resultado) {
                         connecction.release();
                         if (err) {
                             err_ = new Error("Fallo en la query " + err);
@@ -112,6 +112,29 @@ class DAOUsers {
                         else {
                             console.log(resultado.insertId);
                             callback(null, resultado.insertId);
+                        }
+                    });
+            }
+        });
+    }
+
+    updateUser(datos, callback) {
+        this.mypool.getConnection(function (err, connecction) {
+            if (err){
+                callback(new Error("El pool no logra la conexion" + err));
+                return;
+            } 
+            else {
+                connecction.query("update usuario set email=?, password=?, nombre=?, genero=?, fechaNacimiento=?, imagen=? where id=?",
+                    [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.imagen, datos.id], function (err, resultado) {
+                        connecction.release();
+                        if (err){
+                            callback(err);
+                            return; 
+                        }
+                        else {
+                            console.log(datos.id);
+                            callback(null, datos.id);
                         }
                     });
             }
