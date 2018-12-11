@@ -1,9 +1,25 @@
-#container {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
+.tituloAddPreguntas{
+	margin-top: 30px;
+	text-align: center;
+}
+
+.panelAddPreguntas{
+    color:white;
+    margin-top: 50px;
+    display:flex;
+    flex:grow;
+	flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+	margin-left: auto;
+	margin-right: auto;
+    background-image: url("../img/morado.jpg");
+    min-height: 250px;
+	width: 700px;
+	border: black solid;
+	border-radius: 10px;
+    min-width: 350px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .input_p{
@@ -17,9 +33,18 @@
     font-weight: 800;
 }
 
-#boton{
-    display: flex;
-    justify-content: center;
+.botonAdd{
+	width:200px;
+	height: 50px;
+	margin-top: 10px;
+    margin-left: 140px;
+	cursor: pointer;
+	font-family: 'Mali', cursive;
+	font-size: 20px;
+	background-color: white;
+}
+.botonAdd:hover{
+	background-color: grey;
 }
 
 #lasRespuestas{
@@ -28,13 +53,14 @@
 
 #textarea{
     margin-top: 25px;
-    width: 500px;
-    height: 100px;
+    min-width: 510px;
+    min-height: 100px;
+    max-width: 600px;
 }
 
 #titulo{
     margin-top: 25px;
-    width: 500px;
+    width: 510px;
     height: 25px;
     
 }

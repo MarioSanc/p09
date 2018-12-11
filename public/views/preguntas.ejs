@@ -1,20 +1,23 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 
 <head>
     <title> Preguntas - FaceBluff </title>
-    <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="css/preguntas.css" media="screen">
-
+    <link rel="shortcut icon" href="../img/icon.png">
 
 
 </head>
 
 <body>
         <%- include('./header'); %>
-    <div id="contenedor">
-        <div>
+        <h1 class="tituloPreguntas">Preguntas</h1>
+        <div class="panelPreguntas">
+            <%if(lista_preguntas[0]){%>
             <p>Preguntas seleccionadas aleatoriamente:</p>
-        </div>
+        <%}else{%>
+            <p>Parece que nadie ha creado preguntas.</p>
+            <%}%>
         <%lista_preguntas.forEach(pregunta=>{%>
             <div >
                 <ul>

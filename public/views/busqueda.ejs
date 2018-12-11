@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Busqueda</title>
-	<link rel="stylesheet" type="text/css" href="busqueda.css">
+	<title>Buscar Amigos - FaceBluff </title>
+	<link rel="stylesheet" type="text/css" href="css/busqueda.css">
+	<link rel="shortcut icon" href="../img/icon.png">
 </head>
 <body>
-
-	<div id="container">
+		<%- include('./header'); %>
+		<h1 class="buscarTitulo">Buscar Amigos</h1>
+	<div class="panelBuscar">
 		
 		<div id="titulo">
-			<h1>Resultados de busqueda</h1>
+			<h1>Resultados de busqueda:</h1>
 		</div>
 
 
 
 		<div id="resultados">
+			<%if(lista_resultados[0] == undefined){%>
+				<p>No se han encontrado resultados.</p>
+				<%}%>
 			<%lista_resultados.forEach(resultado => {%>
 
 
@@ -22,12 +27,12 @@
 				<div class="imagen_pequenia"></div>
 
 
-				<p><%=resultado.nombre%></p>
+				<p class="nombreUsuario"><%=resultado.nombre%></p>
 
 
 				    <form method="POST" action="/enviarSolicitudAmistad">
                         <input type="hidden" name="id_amigo" value="<%=resultado.id %>" >
-                       <input  value="Solicitar amistad" type="submit">
+                       <input  value="Solicitar amistad" type="submit" class="botonSolicitar">
                     </form>
 			</div>
 

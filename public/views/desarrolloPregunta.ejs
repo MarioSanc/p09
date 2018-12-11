@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Responde a la pregunta</title>
+	<title>Responder Pregunta - FaceBluff</title>
 	<link rel="stylesheet" type="text/css" href="css/desarrollo_pregunta.css" media="screen">
+	<link rel="shortcut icon" href="../img/icon.png">
 </head>
+
 <body>
-		<%- include('./header'); %>
-	<div id="container">
-		
+	<%- include('./header'); %>
+	<h1 class="tituloRespPregunta">Responder Pregunta</h1>
+	<div class="panelRespPregunta">
+
 		<div id="titulo">
-			<h1><%=titulo.titulo%></h1>
+			<h1>
+				<%=titulo.titulo%>
+			</h1>
 		</div>
 
-
-
-	
-
-				<form method="POST" action="/responder">
-
-			<%lista_respuestas.forEach(respuesta => {%>
-				
-			<div class="un_resultado">
-
-				<input class="input_radial" id="<%=respuesta._id%>" name="respuestaID" type="radio" value='<%=respuesta._id%>'>
-				<p class="texto_inline_block"><%=respuesta.text%></p>
-					
-			</div>
-		
-			<%})%>
-
-		</ul>
-
-			<input id="respuesta_especial" name="respuestaID" type="radio" value="-1">
-			<input id="respuesta_especial_texto" name="respuesta_especial_texto" type="text" class="texto_inline_block" class="input_especial">
-			<input id="id_titulo" name="id_pregunta" type="hidden" value="<%=titulo.id%>">
-			
+		<form method="POST" action="/responder">
 			<div>
-					<input  type="submit" value="Responder" class="input_p">
-        </div>
-				</form>
+				<%lista_respuestas.forEach(respuesta => {%>
 
-	
-		
-        
-       
+				<div class="un_resultado">
+
+					<input class="input_radial" id="<%=respuesta._id%>" name="respuestaID" type="radio" value='<%=respuesta._id%>'>
+					<p class="texto_inline_block">
+						<%=respuesta.text%>
+					</p>
+
+				</div>
+
+				<%})%>
+
+				</ul>
+
+				<input id="respuesta_especial" name="respuestaID" type="radio" value="-1" checked>
+				<input id="respuesta_especial_texto" name="respuesta_especial_texto" type="text" class="texto_inline_block" class="input_especial">
+				<input id="id_titulo" name="id_pregunta" type="hidden" value="<%=titulo.id%>">
+			</div>
+			<input type="submit" value="Responder" class="botonResponder">
+		</form>
+
+
+
+
+
 	</div>
 
 </body>
+
 </html>

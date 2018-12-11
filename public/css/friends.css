@@ -1,19 +1,29 @@
-h1{
-    color: black;
-    font-size: 25px;
-    margin-bottom: 10px;
+.tituloAmigos{
+	margin-top: 30px;
+	text-align: center;
 }
 
 #container_general{
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
+    color:white;
+    margin-top: 50px;
+    display:flex;
+    flex:grow;
+	flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+	margin-left: auto;
+	margin-right: auto;
+    background-image: url("../img/morado.jpg");
+    min-height: 150px;
+	width: 700px;
+	border: black solid;
+	border-radius: 10px;
+    min-width: 350px;
+    padding-top: 20px;
+    padding-bottom: 40px;
 }
 
-#una_solicitud{
-    display: inline-block;
+#nombreSolicitud{
+    padding-top: 15px;
     margin-right: 10px;
 }
 
@@ -22,12 +32,49 @@ h1{
     flex-direction: row;
 }
 
-.input_p{
-    font-size: 20px;
-    padding: 5px;
-    display: inline-block;
+.botonAceptar{
+	width:100px;
+	height: 40px;
+	margin-top: 10px;
+	cursor: pointer;
+	font-family: 'Mali', cursive;
+	font-size: 20px;
+    background-color: rgb(130, 202, 130);
+    border-radius: 5px;
+    margin-right: 5px;
+}
+.botonRechazar{
+	width:100px;
+	height: 40px;
+	margin-top: 10px;
+	cursor: pointer;
+	font-family: 'Mali', cursive;
+	font-size: 20px;
+    background-color: rgb(184, 79, 79);
+    border-radius: 5px;
+}
+.botonBuscar{
+    width:100px;
+	height: 40px;
+	margin-top: 10px;
+	cursor: pointer;
+	font-family: 'Mali', cursive;
+	font-size: 20px;
+    background-color: white;
 }
 
+.botonAceptar:hover{
+    background-color: green;
+}
+.botonRechazar:hover{
+    background-color: red;
+}
+.botonBuscar:hover{
+	background-color: grey;
+}
+.campoBuscar{
+    height: 30px;
+}
 .contenedor_centrado{
     margin-top: 20px;
     display: flex;
@@ -35,6 +82,10 @@ h1{
     align-items: center;
 }
 
-p,label{
+#container_general p,label{
     font-size: 20px;
+}
+#container_general h1{
+    margin-bottom: 10px;
+    margin-top: 10px;
 }

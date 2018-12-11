@@ -2,15 +2,14 @@
 
 <head>
         <title> Añade Pregunta - FaceBluff </title>
-        <meta charset="utf-8" />
         <link rel="stylesheet" type="text/css" href="css/nuevaPregunta.css" media="screen">
-
+        <link rel="shortcut icon" href="../img/icon.png">
 </head>
 
 <body>
         <%- include('./header'); %>
-
-        <div id="container">
+        <h1 class="tituloAddPreguntas">Añadir Pregunta</h1>
+        <div class="panelAddPreguntas">
         <form action="/nuevaPregunta" method="POST">
 
             <div>
@@ -21,19 +20,17 @@
 
 
             <div id="lasRespuestas">
-                    <label class="label"> Respuestas </label>
+                    <label class="label"> Respuestas: </label>
 
                     <div>
-                            <textarea id="textarea" name="respuestas" placeholder="Escribe aquí las respuestas, una en cada línea"></textarea>
+                            <textarea id="textarea" maxlength="300" name="respuestas" placeholder="Escribe aquí las respuestas, una en cada línea (max: 300 caracteres)."></textarea>
                     </div>
                 
                 
             </div>
 
-
-            <div id="boton">
-                    <input type="submit" value="Añadir" class="input_p">
-            </div>
+         <input type="submit" value="Añadir" class="botonAdd">
+                
             
         </form>
     </div>

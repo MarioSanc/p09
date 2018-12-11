@@ -134,7 +134,7 @@ app.post("/login", function (request, response) {
             request.session.currentUser = request.body.correo;
             request.session.currentUserId = usuario.id;
             request.session.currentUserPoints = usuario.puntos;
-            request.session.currentUserImage = usuario.imagen == null ? false:true;
+            request.session.currentUserImage = usuario.imagen == null ? false : true;
             response.redirect("/perfil");
         } else {
             console.log("Usuario y/o contraseña incorrectos");
@@ -167,18 +167,18 @@ app.get("/modificarPerfil", middleware_acceso, (request, response) => {
         }
         else {
             response.status(200);
-            let año= result.fechaNacimiento.getFullYear();
+            let año = result.fechaNacimiento.getFullYear();
             let dia = result.fechaNacimiento.getDate();
-            if(dia < 10) dia = "0"+dia;
-            let mes= result.fechaNacimiento.getMonth()+1;
-            if(mes < 10) mes = "0"+mes;
+            if (dia < 10) dia = "0" + dia;
+            let mes = result.fechaNacimiento.getMonth() + 1;
+            if (mes < 10) mes = "0" + mes;
             result.fechaNacimiento = año + "-" + mes + "-" + dia;
             response.render("modificarPerfil", { usuario: result });
         }
     });
 });
 
-app.post("/modificarPerfil",multerFactory.single("foto"), middleware_acceso, (request, response) => {
+app.post("/modificarPerfil", multerFactory.single("foto"), middleware_acceso, (request, response) => {
     request.checkBody("fechaNacimiento", "Fecha de nacimiento no válida.").isBefore();
 
     request.getValidationResult().then(result => {
@@ -196,9 +196,9 @@ app.post("/modificarPerfil",multerFactory.single("foto"), middleware_acceso, (re
             datos.imagen = null;
 
             //Se ha incluido un fichero, pesa menos de 300KB y es de tipo imagen.
-            if (request.file && (request.file.size/1024) < 300 && request.file.mimetype.split('/')[0] === 'image'){
+            if (request.file && (request.file.size / 1024) < 300 && request.file.mimetype.split('/')[0] === 'image') {
                 datos.imagen = request.file.buffer;
-                request.session.currentUserImage = datos.imagen == null ? false:true;
+                request.session.currentUserImage = datos.imagen == null ? false : true;
             }
             daoUsuarios.updateUser(datos, (error, res) => {
                 if (error) {
@@ -262,9 +262,9 @@ app.post("/registro", multerFactory.single("foto"), function (request, response)
             datos.imagen = null;
 
             //Se ha incluido un fichero, pesa menos de 300KB y es de tipo imagen.
-            if (request.file && (request.file.size/1024) < 300 && request.file.mimetype.split('/')[0] === 'image')
+            if (request.file && (request.file.size / 1024) < 300 && request.file.mimetype.split('/')[0] === 'image')
                 datos.imagen = request.file.buffer;
-            
+
             daoUsuarios.newUser(datos, (error, res) => {
                 if (error) {
                     if (error.errno === 1062) {
@@ -432,6 +432,7 @@ app.get("/desarrollo_pregunta", middleware_acceso, function (request, response) 
 
 app.post("/responder", middleware_acceso, function (request, response) {
     response.statusCode = 200;
+
 
     if (request.body.respuestaID == -1) {
 

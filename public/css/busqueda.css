@@ -1,10 +1,8 @@
-
-.tituloRespPregunta{
+.buscarTitulo{
 	margin-top: 30px;
 	text-align: center;
 }
-
-.panelRespPregunta{
+.panelBuscar{
     color:white;
     margin-top: 50px;
     display:flex;
@@ -14,7 +12,7 @@
 	margin-left: auto;
 	margin-right: auto;
     background-image: url("../img/morado.jpg");
-    min-height: 250px;
+    min-height: 150px;
 	width: 700px;
 	border: black solid;
 	border-radius: 10px;
@@ -23,38 +21,37 @@
     padding-bottom: 20px;
 }
 
-.panelRespPregunta p{
+.un_resultado{
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: space-between;
+}
+#resultados p{
+    margin-top: 50px;
     font-size: 25px;
-    font-weight: 800;
-}
-
-.input_radial{
+    color:white;
     display: inline-block;
 }
-
-.texto_inline_block{
+.imagenPequenia{
     display: inline-block;
 }
+.nombreUsuario{
+    display: inline-block;
 
-.input_especial{
-    height: 30px;  
 }
-
-h1{
-    margin-bottom: 25px;
-}
-
-.botonResponder{
-	width:200px;
-	height: 50px;
-	margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+.botonSolicitar{
+    width:200px;
+	height: 35 px;
+    margin-top: 50px;
+    margin-left: 30px;
+    display: inline-block;
 	cursor: pointer;
 	font-family: 'Mali', cursive;
 	font-size: 20px;
-	background-color: white;
+    background-color: white;
 }
-.botonResponder:hover{
+
+.botonSolicitar:hover{
 	background-color: grey;
 }
