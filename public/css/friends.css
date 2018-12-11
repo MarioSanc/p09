@@ -89,7 +89,10 @@
     margin-bottom: 10px;
     margin-top: 10px;
 }
-
+.un_amigo{
+    display:flex;
+    flex-direction: row;
+}
 .imagen_pequenia{
     max-width: 40px;
 	max-height: 40px;

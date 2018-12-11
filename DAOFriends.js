@@ -61,7 +61,7 @@ class DAOFriends {
             let nombre2 = "%" + nombre + "%";
             connection.query(
                 "SELECT id, nombre, imagen FROM usuario WHERE nombre LIKE ? and usuario.id != ? and nombre not in (SELECT nombre FROM `tabla_relacion` JOIN usuario ON id_usuario_A = usuario.id or id_usuario_B = usuario.id "+
-                "WHERE estado_relacion = 0 and (`id_usuario_A` = ? OR `id_usuario_B` = ?))",
+                "WHERE `id_usuario_A` = ? OR `id_usuario_B` = ?)",
                 [nombre2,id_usuario,id_usuario,id_usuario], function (err, usuarios) {
                     connection.release();
                     if (err) { callback(err, undefined);}

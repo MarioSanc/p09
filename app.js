@@ -234,7 +234,7 @@ app.get("/imagen/:id", function (request, response) {
         response.end("Peticion incorrecta");
 
     } else {
-        daoUsuarios.getUserImageName(request.session.currentUserId, function (err, imagen) {
+        daoUsuarios.getUserImageName(n, function (err, imagen) {
             if (imagen) {
                 response.end(imagen);
             } else {

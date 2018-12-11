@@ -21,8 +21,8 @@
 				<% lista_solicitudes.forEach(solicitud => {  %>
 				<div class="una_solicitud">
 					<div>
-						<% if(solicitud.imagen){%>
-						<img class="imagen_pequenia" src="/imagen/<%= solicitud.id %>">
+						<% if(solicitud.id_usuario_A){%>
+						<img class="imagen_pequenia" src="/imagen/<%= solicitud.id_usuario_A %>">
 						<%}else{%>
 						<img class="imagen_pequenia" src="../img/userImg.png" alt="Imagen de usuario.">
 						<%}%>
@@ -73,7 +73,13 @@
 
 				<% lista_amigos.forEach(amigo => { %>
 				<div class="un_amigo">
-					<div class="imagen_pequenia"></div>
+					<div>
+						<% if(amigo.imagen){%>
+						<img class="imagen_pequenia" src="/imagen/<%= amigo.id %>">
+						<%}else{%>
+						<img class="imagen_pequenia" src="../img/userImg.png" alt="Imagen de usuario.">
+						<%}%>
+					</div>
 					<p>
 						<%=amigo.nombre%>
 					</p>
