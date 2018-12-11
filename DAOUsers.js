@@ -97,17 +97,17 @@ class DAOUsers {
 
     newUser(datos, callback) {
         this.mypool.getConnection(function (err, connecction) {
-            if (err){
+            if (err) {
                 callback(new Error("El pool no logra la conexion" + err));
                 return;
-            } 
+            }
             else {
                 connecction.query("insert into usuario(email, password, nombre, genero, fechaNacimiento, imagen) values (?,?,?,?,?,?)",
                     [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.imagen], function (err, resultado) {
                         connecction.release();
-                        if (err){
+                        if (err) {
                             callback(err);
-                            return; 
+                            return;
                         }
                         else {
                             console.log(resultado.insertId);
@@ -120,23 +120,40 @@ class DAOUsers {
 
     updateUser(datos, callback) {
         this.mypool.getConnection(function (err, connecction) {
-            if (err){
+            if (err) {
                 callback(new Error("El pool no logra la conexion" + err));
                 return;
-            } 
+            }
             else {
-                connecction.query("update usuario set email=?, password=?, nombre=?, genero=?, fechaNacimiento=?, imagen=? where id=?",
-                    [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.imagen, datos.id], function (err, resultado) {
-                        connecction.release();
-                        if (err){
-                            callback(err);
-                            return; 
-                        }
-                        else {
-                            console.log(datos.id);
-                            callback(null, datos.id);
-                        }
-                    });
+                if (datos.imagen == null) {
+
+                    connecction.query("update usuario set email=?, password=?, nombre=?, genero=?, fechaNacimiento=? where id=?",
+                        [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.id], function (err, resultado) {
+                            connecction.release();
+                            if (err) {
+                                callback(err);
+                                return;
+                            }
+                            else {
+                                console.log(datos.id);
+                                callback(null, datos.id);
+                            }
+                        });
+                }
+                else {
+                    connecction.query("update usuario set email=?, password=?, nombre=?, genero=?, fechaNacimiento=?, imagen=? where id=?",
+                        [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.imagen, datos.id], function (err, resultado) {
+                            connecction.release();
+                            if (err) {
+                                callback(err);
+                                return;
+                            }
+                            else {
+                                console.log(datos.id);
+                                callback(null, datos.id);
+                            }
+                        });
+                }
             }
         });
     }

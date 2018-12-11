@@ -21,11 +21,20 @@
             <div class="campoRegistro">Nombre: <input class="campoEscribir" type="text" value="<%=usuario.nombre%>" name="nombre" required></div>
             <div class="botonesGenero">
                 Sexo:
-                <input type="radio" name="genero" value="hombre" id="formHombre">
+                <%if(usuario.genero === "hombre"){%>
+                <input type="radio" name="genero" value="hombre" id="formHombre" checked>
+                <%}else{%> <input type="radio" name="genero" value="hombre" id="formHombre">
+                <%}%>
                 <label for="formHombre">Hombre</label>
-                <input type="radio" name="genero" value="mujer" id="formMujer">
+                <%if(usuario.genero === "mujer"){%>
+                <input type="radio" name="genero" value="mujer" id="formMujer" checked>
+                <%}else{%> <input type="radio" name="genero" value="mujer" id="formMujer">
+                <%}%>
                 <label for="formMujer">Mujer</label>
+                <%if(usuario.genero === "otro"){%>
                 <input type="radio" name="genero" value="otro" id="formOtro" checked>
+                <%}else{%><input type="radio" name="genero" value="otro" id="formOtro">
+                <%}%>
                 <label for="formOtro">Otro</label>
             </div>
 

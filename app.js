@@ -168,9 +168,9 @@ app.get("/modificarPerfil", middleware_acceso, (request, response) => {
         else {
             response.status(200);
             let año= result.fechaNacimiento.getFullYear();
-            let dia = result.fechaNacimiento.getDay();
+            let dia = result.fechaNacimiento.getDate();
             if(dia < 10) dia = "0"+dia;
-            let mes= result.fechaNacimiento.getMonth();
+            let mes= result.fechaNacimiento.getMonth()+1;
             if(mes < 10) mes = "0"+mes;
             result.fechaNacimiento = año + "-" + mes + "-" + dia;
             response.render("modificarPerfil", { usuario: result });
@@ -198,14 +198,8 @@ app.post("/modificarPerfil",multerFactory.single("foto"), middleware_acceso, (re
             //Se ha incluido un fichero, pesa menos de 300KB y es de tipo imagen.
             if (request.file && (request.file.size/1024) < 300 && request.file.mimetype.split('/')[0] === 'image'){
                 datos.imagen = request.file.buffer;
+                request.session.currentUserImage = datos.imagen == null ? false:true;
             }
-            else{//Se busca si tenía imagen el usuario
-                daoUsuarios.getUserImageName(request.session.currentUserId, function (err, imagen) {
-                    if (imagen) 
-                        datos.imagen = imagen;
-                });
-            }
-
             daoUsuarios.updateUser(datos, (error, res) => {
                 if (error) {
                     if (error.errno === 1062) {
