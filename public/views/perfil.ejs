@@ -5,13 +5,23 @@
 
     <link rel="stylesheet" type="text/css" href="/css/perfil.css" media="screen">
     <link rel="shortcut icon" href="../img/icon.png">
+    <%if(locals.currentUserId === usuario.id){%>
     <title>Perfil - FaceBluff</title>
+    <%}else{%>
+    <title>Perfil de <%=usuario.nombre%> - FaceBluff</title>
+    <%}%>
+
 </head>
 
 <body>
     <%- include('./header'); %>
-
+    <%if(locals.currentUserId === usuario.id){%>
     <h1 class="tituloPerfil">Tu perfil</h1>
+    <%}else{%>
+    <h1 class="tituloPerfil">Perfil de
+        <%=usuario.nombre%>
+    </h1>
+    <%}%>
     <div class="panelPerfil">
         <div class="imagenDatos">
             <div>
@@ -48,6 +58,37 @@
         <a href="/modificarPerfil" class="enlaceBotonModif">
             <button class="botonModif">Modificar</button>
         </a>
+        <form method="post" action="subirImagen" enctype="multipart/form-data" class="campoSubirImagen">
+            <p>Añadir imagen a la galería:</p>
+            <input type="file" name="foto" value="/imagen/<%= usuario.id %>">
+            <p>Añadele una descripción:</p>
+            <input type="text" name="descripcion" maxlength="25" placeholder="Max 25 caracteres.">
+            <p>Solo imagenes inferiores a 300KB.</p>
+            <input type="submit" name="Añadir" class="botonSubirImg">
+        </form>
+        <%}%>
+        <% let msg = getAndClearFlash();
+            if(msg){%>
+        <p class="flash">
+            <%= msg %>
+        </p>
+        <%}else {%>
+        <p class="flash"> &nbsp </p>
+        <%}%>
+        <%if(imagenes[0]){%>
+        <h1 class= "tituloGaleria">Galería de imagenes:</h1>
+        <div class="galeriaImagenes">
+            <% imagenes.forEach(img => { %>
+            <div class="unaImagen">
+
+                <img class="imagenPerfil" src="/imagen/<%= -img.id %>">
+                <p class= "descripcionImagen">
+                    <%=img.descripcion%>
+                </p>
+            </div>
+            <%})%>
+
+        </div>
         <%}%>
     </div>
 

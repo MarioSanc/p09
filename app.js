@@ -121,7 +121,6 @@ function flashMiddleware(request, response, next) {
     next();
 };
 
-////////////////////////////////////////////////////////////////////////RUTAS//////////////////////////////////////////////////
 /**
  * Arranque del servidor.
  */
@@ -134,6 +133,8 @@ app.listen(config.port, function (err) {
     }
 });
 
+
+////////////////////////////////////////////////////////////////////////RUTAS//////////////////////////////////////////////////
 /**
  * Dirección raiz, redirecciona a login si no está ya logeado.
  */
@@ -186,9 +187,18 @@ app.get("/perfil", middleware_acceso, function (request, response) {
             response.end(err.message);
         }
         else {
-            //Años de diferencia entre la fecha actual y la de nacimiento del usuario.
-            result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
-            response.render("perfil", { usuario: result });
+            daoUsuarios.getUserImages(request.session.currentUserId, (err, images) => {
+                if (err) {
+                    response.status(500);
+                    console.log(err.message);
+                    response.end(err.message);
+                }
+                else {
+                    //Años de diferencia entre la fecha actual y la de nacimiento del usuario.
+                    result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
+                    response.render("perfil", { usuario: result, imagenes: images });
+                }
+            });
         }
     });
 });
@@ -334,8 +344,20 @@ app.get("/imagen/:id", middleware_acceso, function (request, response) {
         response.status(400);
         response.end("Peticion incorrecta");
 
-    } else {
+    } else if (n >= 0) {
         daoUsuarios.getUserImageName(n, function (err, imagen) {
+            if (imagen) {
+                response.status(200);
+                response.end(imagen);
+            } else {
+                response.status(404);
+                response.end("Not found");
+            }
+        });
+    }
+    else {
+        n = n * (-1);
+        daoUsuarios.getUserImagesMostrar(n, function (err, imagen) {
             if (imagen) {
                 response.status(200);
                 response.end(imagen);
@@ -364,13 +386,66 @@ app.get("/perfil/:id", middleware_acceso, function (request, response) {
                 response.end(err.message);
             }
             else {
-                result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
-                response.render("perfil", { usuario: result });
+                daoUsuarios.getUserImages(n, (err, images) => {
+                    if (err) {
+                        response.status(500);
+                        console.log(err.message);
+                        response.end(err.message);
+                    }
+                    else {
+                        //Años de diferencia entre la fecha actual y la de nacimiento del usuario.
+                        result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
+                        response.render("perfil", { usuario: result, imagenes: images });
+                    }
+                });
             }
         });
     }
 });
 
+/**
+ * Dirección para subir una imagen a la galería personal.
+ */
+app.post("/subirImagen", multerFactory.single("foto"), middleware_acceso, (request, response) => {
+
+    let imagen = null;
+    let descripcion = request.body.descripcion;
+    //Se ha incluido un fichero, pesa menos de 300KB y es de tipo imagen.
+    if (request.file && (request.file.size / 1024) < 300 && request.file.mimetype.split('/')[0] === 'image')
+        imagen = request.file.buffer;
+
+    if (imagen) {
+        daoUsuarios.insertarImagen(request.session.currentUserId, imagen, descripcion, (error, res) => {
+            if (error) {
+                response.status(500);
+                console.log(error.message);
+                response.end(error.message);
+            }
+            else {
+                request.session.currentUserPoints += 100;//Sumamos 100 puntos en vez de restar por falta de la parte 3.
+                daoUsuarios.modificarPuntos(request.session.currentUserId, request.session.currentUserPoints, (err, res) => {
+                    if(err){
+                        response.status(500);
+                        console.log(err.message);
+                        response.end(err.message); 
+                    }
+                    else{
+                        response.redirect("perfil");
+                    }
+                });
+            }
+        });
+    }
+    else {
+        response.setFlash("Error con el tipo o peso de la imagen.");
+        response.redirect("perfil");
+    }
+
+});
+
+/**
+ * Vista con una lista de amigos, espacio para buscar y una lista de solicitudes de amistad.
+ */
 app.get("/friends", middleware_acceso, function (request, response) {
     response.statusCode = 200;
     daoF.get_amigos(request.session.currentUserId, function (err, _lista_amigos) {
@@ -470,23 +545,22 @@ app.get("/nuevaPregunta", middleware_acceso, function (request, response) {
 app.post("/nuevaPregunta", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
-    if(request.body.la_pregunta == ""){
+    if (request.body.la_pregunta == "") {
         response.setFlash("Titulo vacío");
         response.redirect("/nuevaPregunta");
-        
 
-    }else{
+    } else {
 
-    let allAnswers = request.body.respuestas;
-    let answer = allAnswers.split("\n");
+        let allAnswers = request.body.respuestas;
+        let answer = allAnswers.split("\n");
 
-    // console.log(request.body.la_pregunta);
-    daoPR.aniadir_pregunta(request.body.la_pregunta, answer, function cd(err) {
-        if (err) console.log(err);
-        else {
-            response.redirect("preguntas");
-        }
-    });
+        // console.log(request.body.la_pregunta);
+        daoPR.aniadir_pregunta(request.body.la_pregunta, answer, function cd(err) {
+            if (err) console.log(err);
+            else {
+                response.redirect("preguntas");
+            }
+        });
     }
 
 
@@ -525,51 +599,54 @@ app.post("/responder", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
     if (request.body.respuestaID == -1) {
-        if(request.body.respuesta_especial_texto == ""){
+        if (request.body.respuesta_especial_texto == "") {
             response.setFlash("Elige una respuesta");
             console.log(request);
-            response.redirect("/desarrollo_pregunta"+"?id_pregunta="+request.body.id_pregunta);
-          
-        }else{
+            response.redirect("/desarrollo_pregunta" + "?id_pregunta=" + request.body.id_pregunta);
 
-        daoPR.aniadir_respuesta_especial(request.body.respuesta_especial_texto, request.body.id_pregunta, function cb(insertedID) {
+        } else {
 
-            // console.log(insertedID);
+            daoPR.aniadir_respuesta_especial(request.body.respuesta_especial_texto, request.body.id_pregunta, function cb(insertedID) {
 
-            daoPR.aniadirRespuestaUsuario(request.session.currentUserId, insertedID,
-                function (err) {
-                    if (err) {  if(err.code == "ER_DUP_ENTRY"){
-                        response.setFlash("Ya respondiste esa respuesta");
-                        console.log(request);
-                        response.redirect("/desarrollo_pregunta"+"?id_pregunta="+request.body.id_pregunta);
-                    }
-                  
-                    console.error(err);}
-                    else {
-                        console.log("Respondido");
-                        response.status(300);
-                        response.redirect("/preguntas");
-                        response.end();
-                    }
-                })
-        })}
+                // console.log(insertedID);
+
+                daoPR.aniadirRespuestaUsuario(request.session.currentUserId, insertedID,
+                    function (err) {
+                        if (err) {
+                            if (err.code == "ER_DUP_ENTRY") {
+                                response.setFlash("Ya respondiste esa respuesta");
+                                console.log(request);
+                                response.redirect("/desarrollo_pregunta" + "?id_pregunta=" + request.body.id_pregunta);
+                            }
+
+                            console.error(err);
+                        }
+                        else {
+                            console.log("Respondido");
+                            response.status(300);
+                            response.redirect("/preguntas");
+                            response.end();
+                        }
+                    })
+            })
+        }
 
     } else {
 
-     
+
 
 
         daoPR.aniadirRespuestaUsuario(request.session.currentUserId, request.body.respuestaID, function (err) {
-            if (err) { 
+            if (err) {
 
-                if(err.code == "ER_DUP_ENTRY"){
+                if (err.code == "ER_DUP_ENTRY") {
                     response.setFlash("Ya respondiste esa respuesta");
                     console.log(request);
-                    response.redirect("/desarrollo_pregunta"+"?id_pregunta="+request.body.id_pregunta);
+                    response.redirect("/desarrollo_pregunta" + "?id_pregunta=" + request.body.id_pregunta);
                 }
-              
+
                 console.error(err);
-            
+
             }
             else {
                 console.log("Respondido");
@@ -577,8 +654,9 @@ app.post("/responder", middleware_acceso, function (request, response) {
                 response.redirect("/preguntas");
                 response.end();
             }
-        })}
-    
+        })
+    }
+
 
 });
 

@@ -190,6 +190,129 @@ class DAOUsers {
         });
     }
 
+    /**
+     * Obtiene los id y las descripciones de las imagenes del usuario con el id recibido por parámetro.
+     * @param {*} id 
+     * @param {*} callback 
+     */
+    getUserImages(id, callback) {
+        let err_;
+        this.mypool.getConnection(function (err, connecction) {
+            if (err) {
+                err_ = new Error("El pool no logra la conexion");
+                callback(err_);
+            }
+            else {
+                connecction.query("select id, descripcion from imagenes where id_usuario = ?",
+                    [id], function (err, resultado) {
+                        connecction.release();
+                        if (err) {
+                            err_ = new Error("Fallo en la query " + err);
+
+                            callback(err_);
+                        }
+                        else {
+                                callback(null, resultado);
+                        }
+                    })
+            }
+        });
+    }
+
+    /**
+     * Inserta una imagen en la BBDD junto al id del usuario a quien pertenece y una descripción.
+     * @param {*} id 
+     * @param {*} imagen 
+     * @param {*} descripcion 
+     * @param {*} callback 
+     */
+    insertarImagen(id, imagen, descripcion, callback) {
+        this.mypool.getConnection(function (err, connecction) {
+            if (err) {
+                callback(new Error("El pool no logra la conexion" + err));
+                return;
+            }
+            else {
+                connecction.query("insert into imagenes(id_usuario, imagen, descripcion) values (?,?,?)",
+                    [id,imagen,descripcion], function (err, resultado) {
+                        connecction.release();
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+                        else {
+                            console.log(resultado.insertId);
+                            callback(null, resultado.insertId);
+                        }
+                    });
+            }
+        });
+    }
+
+    /**
+     * Devuelve la imagen con el id recibido por parámetro.
+     * @param {*} id 
+     * @param {*} callback 
+     */
+    getUserImagesMostrar(id, callback) {
+        let err_;
+        this.mypool.getConnection(function (err, connecction) {
+            if (err) {
+                err_ = new Error("El pool no logra la conexion");
+                callback(err_);
+            }
+            else {
+                connecction.query("select imagen from imagenes where id = ?",
+                    [id], function (err, resultado) {
+                        connecction.release();
+                        if (err) {
+                            err_ = new Error("Fallo en la query " + err);
+
+                            callback(err_);
+                        }
+                        else {
+                            if (resultado.length === 0) {
+                                err_ = new Error("No existe el usuario");
+
+                                callback(err_);
+                            } else
+                                callback(null, resultado[0].imagen);
+                        }
+                    })
+            }
+        });
+    }
+
+    /**
+     * Modifica los puntos de un usuario con el id recibido por parámetro.
+     * @param {*} id 
+     * @param {*} puntos 
+     * @param {*} callback 
+     */
+    modificarPuntos(id, puntos, callback){
+        this.mypool.getConnection(function (err, connecction) {
+            if (err) {
+                callback(new Error("El pool no logra la conexion" + err));
+                return;
+            }
+            else {
+                connecction.query("UPDATE usuario SET puntos = ? WHERE id = ?",
+                    [puntos,id], function (err, resultado) {
+                        connecction.release();
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+                        else {
+                            console.log(resultado);
+                            callback(null,resultado);
+                        }
+                    });
+            }
+        });
+    }
+
+
 }
 
 module.exports = DAOUsers;

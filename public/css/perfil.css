@@ -12,7 +12,7 @@
 	margin-right: auto;
 	background-image: url("../img/morado.jpg");
 	min-height: 300px;
-	width: 40%;
+	max-width: 900px;
 	border: black solid;
 	border-radius: 10px;
     min-width: 500px;
@@ -57,4 +57,63 @@
 .enlaceBotonModif{
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.galeriaImagenes{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-left: 30px;
+	margin-right: 20px;
+}
+
+.campoSubirImagen{
+	color:white;
+	display: flex;
+	flex-direction: column;
+	margin-right: auto;
+	margin-left: auto;
+	border: 2px black solid;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.botonSubirImg{
+	width:200px;
+	height: 50px;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	cursor: pointer;
+	font-family: 'Mali', cursive;
+	font-size: 20px;
+	background-color: white;
+}
+
+.botonSubirImg:hover{
+	background-color:grey;
+}
+
+.descripcionImagen{
+	max-width: 200px;
+	color:white;
+}
+
+.tituloGaleria{
+	color:white;
+	margin-bottom: 10px;
+	margin-left:auto;
+	margin-right: auto;
+}
+
+.unaImagen{
+	margin:5px;
+}
+.flash{
+	text-align: center;
+	color: red;
+	font-size: 130%;
+    font-weight: bold;
+    margin-top:1%;
+	margin-bottom: 1%;
 }

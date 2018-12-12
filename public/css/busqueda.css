@@ -10,15 +10,14 @@
 	flex-direction: column;
     align-items: center;
 	margin-left: auto;
-	margin-right: auto;
+    margin-right: auto;
     background-image: url("../img/morado.jpg");
     min-height: 150px;
 	width: 700px;
 	border: black solid;
 	border-radius: 10px;
     min-width: 350px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+
 }
 
 .un_resultado{
@@ -26,24 +25,20 @@
     flex-direction:row;
     align-items: center;
     justify-content: space-between;
+    margin-top: 20px;
 }
 #resultados p{
-    margin-top: 50px;
     font-size: 25px;
     color:white;
     display: inline-block;
 }
-.imagenPequenia{
-    display: inline-block;
-}
+
 .nombreUsuario{
     display: inline-block;
-
 }
 .botonSolicitar{
     width:200px;
-	height: 35 px;
-    margin-top: 50px;
+	height: 35px;
     margin-left: 30px;
     display: inline-block;
 	cursor: pointer;
@@ -61,6 +56,5 @@
 	max-height: 40px;
 	min-width: 40px;
 	min-height: 40px;
-    margin-top: 7px;
     margin-right: 10px;
 }
