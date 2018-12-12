@@ -21,7 +21,7 @@
 				<% lista_solicitudes.forEach(solicitud => {  %>
 				<div class="una_solicitud">
 					<div>
-						<% if(solicitud.imagen != null){%>
+						<% if(solicitud.imagen){%>
 						<img class="imagen_pequenia" src="/imagen/<%= solicitud.id_usuario_A %>">
 						<%}else{%>
 						<img class="imagen_pequenia" src="../img/userImg.png" alt="Imagen de usuario.">
