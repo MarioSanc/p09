@@ -1,21 +1,23 @@
 const config = require("./config");
-const DAOFriends = require("./DAOFriends");
-const DAOPreguntasRespuestas = require("./DAOPreguntasRespuestas");
 const path = require("path");
 const mysql = require("mysql");
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const morgan = require("morgan");
-const expressValidator = require('express-validator');
-//daos
-const DAOUsers = require("./DAOUsers");
 const multer = require("multer");
+const expressValidator = require('express-validator');
+const session = require("express-session");
+const mysqlSession = require("express-mysql-session");
+//DAOS
+const DAOUsers = require("./DAOUsers");
+const DAOFriends = require("./DAOFriends");
+const DAOPreguntasRespuestas = require("./DAOPreguntasRespuestas");
+
+
 let moment = require("moment");
 moment.locale('es');
 
-const session = require("express-session");
-const mysqlSession = require("express-mysql-session");
 const MySQLStore = mysqlSession(session);
 const sessionStore = new MySQLStore(config.mysqlConfig);
 
@@ -25,7 +27,7 @@ const app = express();
 // Crear un pool de conexiones a la base de datos de MySQL
 const pool = mysql.createPool(config.mysqlConfig);
 
-// Crear una instancia de DAOTasks
+// Crear una instancia de cada DAO
 const daoUsuarios = new DAOUsers(pool);
 const daoF = new DAOFriends(pool);
 const daoPR = new DAOPreguntasRespuestas(pool);
@@ -55,15 +57,20 @@ Cuando se recibe una petición GET para acceder a alguno de estos recursos está
 se lee el fichero correspondiente y se envía su contenido en la respuesta. 
 El middleware static se encarga de todo esto*/
 app.use(express.static(ficherosEstaticos));
-
-// Se incluye el middleware body-parser en la cadena de middleware 
 /*Este middleware obtiene el cuerpo de la petición HTTP, interpreta su contenido y
-modifica el objeto request
-añadiéndole un nuevo atributo (llamado body) con la información del formulario.*/
+modifica el objeto request añadiéndole un nuevo atributo (llamado body) con la información del formulario.*/
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 app.use(flashMiddleware);
 
+/**
+ * Cuando el usuario intenta acceder a una dirección destinada a usuarios logeados:
+ * Si el usuario está logeado, pasa a local su id, email, puntos y si tiene foto de perfil.
+ * En caso contrario le redirige a la vista de login.
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} next 
+ */
 function middleware_acceso(request, response, next) {
     if (request.session.currentUser != undefined) {
         response.locals.userEmail = request.session.currentUser;
@@ -76,6 +83,14 @@ function middleware_acceso(request, response, next) {
     }
 }
 
+/**
+ * Cuando el usuario intenta acceder a una vista destinada a usuarios no logeados:
+ * Si el usuario está logeado, pasa a local su id, email, puntos y si tiene foto de perfil.
+ * En caso contrario sigue con la vista que intentaba cargar.
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} next 
+ */
 function middleware_logeado(request, response, next) {
     if (request.session.currentUser != undefined) {
         response.locals.userEmail = request.session.currentUser;
@@ -88,7 +103,12 @@ function middleware_logeado(request, response, next) {
     }
 }
 
-
+/**
+ * Middleware para el mostrado de errores en formularios mediante el uso de flash.
+ * @param {*} request 
+ * @param {*} response 
+ * @param {*} next 
+ */
 function flashMiddleware(request, response, next) {
     response.setFlash = function (msg) {
         request.session.flashMsg = msg;
@@ -101,27 +121,38 @@ function flashMiddleware(request, response, next) {
     next();
 };
 
-// Arrancar el servidor
+////////////////////////////////////////////////////////////////////////RUTAS//////////////////////////////////////////////////
+/**
+ * Arranque del servidor.
+ */
 app.listen(config.port, function (err) {
     if (err) {
         console.log("ERROR al iniciar el servidor");
     }
     else {
         console.log(`Servidor arrancado en el puerto ${config.port}`);
-        //console.log(ficherosEstaticos);
     }
 });
 
+/**
+ * Dirección raiz, redirecciona a login si no está ya logeado.
+ */
 app.get("/", middleware_logeado, function (request, response) {
+    response.statusCode = 200;
     response.redirect("/login");
 });
 
-
+/**
+ * Dirección de login, muestra la vista del login si no está ya logeado.
+ */
 app.get("/login", middleware_logeado, function (request, response) {
     response.statusCode = 200;
     response.render("login", { mensaje: null });
 });
 
+/**
+ * Valida los datos introducidos en la vista login y si son correctos redirecciona al perfil del usuario, en caso contrario muestra un mensaje flash.
+ */
 app.post("/login", function (request, response) {
     response.statusCode = 200;
     daoUsuarios.isUserCorrect(request.body.correo, request.body.password, function cb_isUserCorrect(err, result, usuario) {
@@ -144,6 +175,9 @@ app.post("/login", function (request, response) {
     });
 });
 
+/**
+ * Dirección de la vista de perfil.
+ */
 app.get("/perfil", middleware_acceso, function (request, response) {
     daoUsuarios.getUser(request.session.currentUserId, (err, result) => {
         if (err) {
@@ -152,6 +186,7 @@ app.get("/perfil", middleware_acceso, function (request, response) {
             response.end(err.message);
         }
         else {
+            //Años de diferencia entre la fecha actual y la de nacimiento del usuario.
             result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
             response.render("perfil", { usuario: result });
         }
@@ -159,7 +194,9 @@ app.get("/perfil", middleware_acceso, function (request, response) {
 });
 
 
-
+/**
+ * Dirección de la vista de modificar perfil.
+ */
 app.get("/modificarPerfil", middleware_acceso, (request, response) => {
     daoUsuarios.getUser(request.session.currentUserId, (err, result) => {
         if (err) {
@@ -180,6 +217,9 @@ app.get("/modificarPerfil", middleware_acceso, (request, response) => {
     });
 });
 
+/**
+ * Valida los datos que quiere modificar el usuario.
+ */
 app.post("/modificarPerfil", multerFactory.single("foto"), middleware_acceso, (request, response) => {
     request.checkBody("fechaNacimiento", "Fecha de nacimiento no válida.").isBefore();
 
@@ -207,12 +247,14 @@ app.post("/modificarPerfil", multerFactory.single("foto"), middleware_acceso, (r
                     if (error.errno === 1062) {
                         response.setFlash("El email introducido ya está en uso.");
                         response.redirect("modificarPerfil");
-                    } else console.log(error.message);
-                    response.end();
+                    } else {
+                        response.status(400);
+                        console.log(error.message);
+                        response.end();
+                    }
                 }
                 else {
                     response.redirect("perfil");
-                    response.end();
                 }
             });
         } else {
@@ -222,58 +264,26 @@ app.post("/modificarPerfil", multerFactory.single("foto"), middleware_acceso, (r
     });
 });
 
+/**
+ * Desconecta la sesion del usuario actual y redirige a login.
+ */
 app.get("/desconectar", middleware_acceso, (request, response) => {
     response.status(300);
     request.session.destroy();
     response.redirect("/login");
-    response.end();
 });
 
-app.get("/perfil/:id", middleware_acceso, function (request, response) {
-    let n = request.params.id;
-    if (isNaN(n)) {
-        response.status(400);
-        response.end("Peticion incorrecta");
-    }
-    else {
-        daoUsuarios.getUser(n, (err, result) => {
-            if (err) {
-                response.status(500);
-                console.log(err.message);
-                response.end(err.message);
-            }
-            else {
-                result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
-                response.render("perfil", { usuario: result });
-                response.end();
-            }
-        });
-    }
-});
-
-app.get("/imagen/:id", function (request, response) {
-    let n = request.params.id;
-    if (isNaN(n)) {
-        response.status(400);
-        response.end("Peticion incorrecta");
-
-    } else {
-        daoUsuarios.getUserImageName(n, function (err, imagen) {
-            if (imagen) {
-                response.end(imagen);
-            } else {
-                response.status(404);
-                response.end("Not found");
-            }
-        });
-    }
-});
-
+/**
+ * Dirección del formulario de registro.
+ */
 app.get("/registro", middleware_logeado, (request, response) => {
     response.status(200);
     response.render("registro");
 });
 
+/**
+ * Valida los datos introducidos por el usuario y si son correctos lo inserta en la BBDD.
+ */
 app.post("/registro", multerFactory.single("foto"), function (request, response) {
 
     request.checkBody("fechaNacimiento", "Fecha de nacimiento no válida.").isBefore();
@@ -305,7 +315,6 @@ app.post("/registro", multerFactory.single("foto"), function (request, response)
                 }
                 else {
                     response.redirect("login");
-                    response.end();
                 }
             });
         } else {
@@ -316,13 +325,58 @@ app.post("/registro", multerFactory.single("foto"), function (request, response)
 
 });
 
+/**
+ * Obtiene la imagen de la BBDD del usuario con el id de la llamada.
+ */
+app.get("/imagen/:id", middleware_acceso, function (request, response) {
+    let n = request.params.id;
+    if (isNaN(n)) {
+        response.status(400);
+        response.end("Peticion incorrecta");
+
+    } else {
+        daoUsuarios.getUserImageName(n, function (err, imagen) {
+            if (imagen) {
+                response.status(200);
+                response.end(imagen);
+            } else {
+                response.status(404);
+                response.end("Not found");
+            }
+        });
+    }
+});
+
+/**
+ * Dirección al perfil del usuario con la id recibida.
+ */
+app.get("/perfil/:id", middleware_acceso, function (request, response) {
+    let n = request.params.id;
+    if (isNaN(n)) {
+        response.status(400);
+        response.end("Peticion incorrecta");
+    }
+    else {
+        daoUsuarios.getUser(n, (err, result) => {
+            if (err) {
+                response.status(500);
+                console.log(err.message);
+                response.end(err.message);
+            }
+            else {
+                result.fechaNacimiento = moment().diff(result.fechaNacimiento, 'years');
+                response.render("perfil", { usuario: result });
+            }
+        });
+    }
+});
+
 app.get("/friends", middleware_acceso, function (request, response) {
     response.statusCode = 200;
     daoF.get_amigos(request.session.currentUserId, function (err, _lista_amigos) {
         if (err) {
             console.error("1" + err);
         } else {
-
 
             daoF.get_solicitudes_amistad(request.session.currentUserId, function (err, lista_solicitudes_amistad) {
                 if (err) {
@@ -357,7 +411,6 @@ app.post("/aceptarSolicitudAmistad", middleware_acceso, function (request, respo
 app.post("/rechazarSolicitudAmistad", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
-    //console.log(request.body.id_amigo);
     daoF.rechazar_solicitud_amistad(request.session.currentUserId, request.body.id_amigo,
         function (err) {
             if (err) { console.error(err); }
@@ -371,7 +424,6 @@ app.post("/rechazarSolicitudAmistad", middleware_acceso, function (request, resp
 app.post("/enviarSolicitudAmistad", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
-    //console.log(request.body.id_amigo);
     daoF.enviar_solicitud_amistad(request.session.currentUserId, request.body.id_amigo,
         function (err) {
             if (err) { console.error(err); }
@@ -421,7 +473,6 @@ app.post("/nuevaPregunta", middleware_acceso, function (request, response) {
     let allAnswers = request.body.respuestas;
     let answer = allAnswers.split("\n");
 
-    // console.log(request.body.la_pregunta);
     daoPR.aniadir_pregunta(request.body.la_pregunta, answer, function cd(err) {
         if (err) console.log(err);
         else {
@@ -452,7 +503,7 @@ app.get("/desarrollo_pregunta", middleware_acceso, function (request, response) 
 
             console.log(resultado);
             let _titulo = { titulo: resultado[0].texto_pregunta, id: resultado[0].id_pregunta };
-            //console.log(arrayRespuestas);
+
             response.render("desarrolloPregunta", { lista_respuestas: arrayRespuestas, titulo: _titulo })
         }
 
@@ -466,12 +517,7 @@ app.post("/responder", middleware_acceso, function (request, response) {
 
     if (request.body.respuestaID == -1) {
 
-        //  console.log(request.body.respuesta_especial_texto);
-        //  console.log(request.body.id_pregunta);
-
         daoPR.aniadir_respuesta_especial(request.body.respuesta_especial_texto, request.body.id_pregunta, function cb(insertedID) {
-
-            // console.log(insertedID);
 
             daoPR.aniadirRespuestaUsuario(request.session.currentUserId, insertedID,
                 function (err) {
@@ -486,9 +532,6 @@ app.post("/responder", middleware_acceso, function (request, response) {
         })
 
     } else {
-
-
-
 
         daoPR.aniadirRespuestaUsuario(request.session.currentUserId, request.body.respuestaID, function (err) {
             if (err) { console.error(err); }
