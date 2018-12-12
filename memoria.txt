@@ -38,6 +38,16 @@ MEDIUMBLOB: 16 megabytes. --->Este elegimos.
 LONGBLOB : 4 gigabytes.
 -----------------------------
 
+Validaciones de formularios
+      titulo vacio al crear pregunta
+      respuesta especial vacia 
+
+Lógia de aplicación implementada
+      un usuario no se encuentra a si mismo
+      un usuario que ha enviado peticion de amistad a otro o es amigo, ya no le encuentra
+
+-------------------------------------------------------------------------------------------
+
 
 
 
@@ -46,18 +56,3 @@ Tabla relacion ->
         0 -> relacion de amistad
         1 -> peticion de amistad del usuario_inicio_relacion usarioa (Alpha) al otro usuario (Beta)
                     usuario_inicio_relacion no necesario
-
-insert into tabla_relacion (`id_usuario_A`, `id_usuario_B`, `estado_relacion`, `usuario_inicio_relacion`) values (3,4,1,1);
-
-ALTER TABLE `tabla_relacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
-
-
-
-
-  ALTER TABLE `tabla_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
-
-
-    ALTER TABLE `tabla_respuestas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;

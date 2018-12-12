@@ -26,7 +26,7 @@ class DAOFriends {
                 callback(err, undefined);
             }
 
-            connection.query("SELECT tabla_relacion.id_usuario_A , usuario.nombre FROM `tabla_relacion` join usuario on (tabla_relacion.id_usuario_A = usuario.id) WHERE `id_usuario_B` = ? AND tabla_relacion.estado_relacion = 1 ",
+            connection.query("SELECT tabla_relacion.id_usuario_A , usuario.nombre, usuario.imagen FROM `tabla_relacion` join usuario on (tabla_relacion.id_usuario_A = usuario.id) WHERE `id_usuario_B` = ? AND tabla_relacion.estado_relacion = 1 ",
                 [id_usuario], function (err, solicitudes) {
                     connection.release();
                     if (err) { callback(err, undefined); }

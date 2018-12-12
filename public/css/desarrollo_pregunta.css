@@ -58,3 +58,12 @@
 .botonResponder:hover{
 	background-color: grey;
 }
+
+.flash{
+	text-align: center;
+	color: red;
+	font-size: 130%;
+    font-weight: bold;
+    margin-top:1%;
+	margin-bottom: 1%;
+}

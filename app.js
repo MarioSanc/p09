@@ -470,15 +470,25 @@ app.get("/nuevaPregunta", middleware_acceso, function (request, response) {
 app.post("/nuevaPregunta", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
+    if(request.body.la_pregunta == ""){
+        response.setFlash("Titulo vacío");
+        response.redirect("/nuevaPregunta");
+        
+
+    }else{
+
     let allAnswers = request.body.respuestas;
     let answer = allAnswers.split("\n");
 
+    // console.log(request.body.la_pregunta);
     daoPR.aniadir_pregunta(request.body.la_pregunta, answer, function cd(err) {
         if (err) console.log(err);
         else {
             response.redirect("preguntas");
         }
     });
+    }
+
 
 });
 
@@ -514,14 +524,27 @@ app.get("/desarrollo_pregunta", middleware_acceso, function (request, response) 
 app.post("/responder", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
-
     if (request.body.respuestaID == -1) {
+        if(request.body.respuesta_especial_texto == ""){
+            response.setFlash("Elige una respuesta");
+            console.log(request);
+            response.redirect("/desarrollo_pregunta"+"?id_pregunta="+request.body.id_pregunta);
+          
+        }else{
 
         daoPR.aniadir_respuesta_especial(request.body.respuesta_especial_texto, request.body.id_pregunta, function cb(insertedID) {
 
+            // console.log(insertedID);
+
             daoPR.aniadirRespuestaUsuario(request.session.currentUserId, insertedID,
                 function (err) {
-                    if (err) { console.error(err); }
+                    if (err) {  if(err.code == "ER_DUP_ENTRY"){
+                        response.setFlash("Ya respondiste esa respuesta");
+                        console.log(request);
+                        response.redirect("/desarrollo_pregunta"+"?id_pregunta="+request.body.id_pregunta);
+                    }
+                  
+                    console.error(err);}
                     else {
                         console.log("Respondido");
                         response.status(300);
@@ -529,20 +552,33 @@ app.post("/responder", middleware_acceso, function (request, response) {
                         response.end();
                     }
                 })
-        })
+        })}
 
     } else {
 
+     
+
+
         daoPR.aniadirRespuestaUsuario(request.session.currentUserId, request.body.respuestaID, function (err) {
-            if (err) { console.error(err); }
+            if (err) { 
+
+                if(err.code == "ER_DUP_ENTRY"){
+                    response.setFlash("Ya respondiste esa respuesta");
+                    console.log(request);
+                    response.redirect("/desarrollo_pregunta"+"?id_pregunta="+request.body.id_pregunta);
+                }
+              
+                console.error(err);
+            
+            }
             else {
                 console.log("Respondido");
                 response.status(300);
                 response.redirect("/preguntas");
                 response.end();
             }
-        })
-    }
+        })}
+    
 
 });
 

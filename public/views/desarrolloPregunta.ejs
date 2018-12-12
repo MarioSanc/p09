@@ -42,6 +42,9 @@
 			<input type="submit" value="Responder" class="botonResponder">
 		</form>
 
+		<% let msg = getAndClearFlash();
+		if(msg){%> <p class="flash"> <%= msg %> </p><%}else {%> <p class="flash"> &nbsp </p> <%}%>
+
 	</div>
 
 </body>
