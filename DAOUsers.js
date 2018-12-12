@@ -1,13 +1,25 @@
 "use strict";
 
+/**
+ * Modulo que contiene las operaciones necesarias y que afectan a las funcionalidades de gestión de usuario.
+ */
 class DAOUsers {
 
+    /**
+     * Constructor
+     * @param {*} pool 
+     */
     constructor(pool) {
 
         this.mypool = pool;
     }
 
-
+    /**
+     * Verifica que exista el usuario con el email y la password recibidos por parámetro.
+     * @param {*} email 
+     * @param {*} password 
+     * @param {*} callback 
+     */
     isUserCorrect(email, password, callback) {
         let err_;
         this.mypool.getConnection(function (err, connecction) {
@@ -36,7 +48,11 @@ class DAOUsers {
         });
     }
 
-
+    /**
+     * Devuelve la imagen del usuario con el id recibido por parámetro.
+     * @param {*} id 
+     * @param {*} callback 
+     */
     getUserImageName(id, callback) {
         let err_;
         this.mypool.getConnection(function (err, connecction) {
@@ -66,6 +82,11 @@ class DAOUsers {
         });
     }
 
+    /**
+     * Devuelve todos los datos del usuario con el id recibido por parámetro.
+     * @param {*} id 
+     * @param {*} callback 
+     */
     getUser(id, callback) {
         let err_;
         this.mypool.getConnection(function (err, connecction) {
@@ -95,6 +116,11 @@ class DAOUsers {
         });
     }
 
+    /**
+     * Inserata un usuario en la BBDD de usuario con los datos recibidos por parámetro.
+     * @param {*} datos 
+     * @param {*} callback 
+     */
     newUser(datos, callback) {
         this.mypool.getConnection(function (err, connecction) {
             if (err) {
@@ -118,6 +144,11 @@ class DAOUsers {
         });
     }
 
+    /**
+     * Actualiza los datos del usuario con el id recibido por parámetro.
+     * @param {*} datos 
+     * @param {*} callback 
+     */
     updateUser(datos, callback) {
         this.mypool.getConnection(function (err, connecction) {
             if (err) {
@@ -126,7 +157,7 @@ class DAOUsers {
             }
             else {
                 if (datos.imagen == null) {
-
+                    //Si la imagen nueva es null, no actualiza la imagen.
                     connecction.query("update usuario set email=?, password=?, nombre=?, genero=?, fechaNacimiento=? where id=?",
                         [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.id], function (err, resultado) {
                             connecction.release();
@@ -141,6 +172,7 @@ class DAOUsers {
                         });
                 }
                 else {
+                    //Si la nueva imagen no es null, se actualiza.
                     connecction.query("update usuario set email=?, password=?, nombre=?, genero=?, fechaNacimiento=?, imagen=? where id=?",
                         [datos.email, datos.password, datos.nombre, datos.genero, datos.fechaNacimiento, datos.imagen, datos.id], function (err, resultado) {
                             connecction.release();
