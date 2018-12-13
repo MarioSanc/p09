@@ -469,6 +469,9 @@ app.get("/friends", middleware_acceso, function (request, response) {
     });
 });
 
+/**
+ * este codigo se ejecuta cuando se va a aceptar una solicitud de amistad
+ */
 app.post("/aceptarSolicitudAmistad", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
@@ -483,6 +486,9 @@ app.post("/aceptarSolicitudAmistad", middleware_acceso, function (request, respo
         })
 });
 
+/**
+ * este codigo se ejecuta cuando se va a rechazar una solicitud de amistad
+ */
 app.post("/rechazarSolicitudAmistad", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
@@ -496,6 +502,9 @@ app.post("/rechazarSolicitudAmistad", middleware_acceso, function (request, resp
         })
 });
 
+/**
+ * este codigo se ejecuta cuando se va a enviar una solicitud de amistad
+ */
 app.post("/enviarSolicitudAmistad", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
@@ -510,7 +519,9 @@ app.post("/enviarSolicitudAmistad", middleware_acceso, function (request, respon
 });
 
 
-
+/**
+ * este codigo se ejecuta cuando se va a buscar un usuario
+ */
 app.get("/buscarNombre", middleware_acceso, function (request, response) {
     response.statusCode = 200;
     daoF.get_usuarios_por_nombre(request.query.nombre, request.session.currentUserId, function cb(err, usuarios) {
@@ -523,6 +534,9 @@ app.get("/buscarNombre", middleware_acceso, function (request, response) {
     });
 });
 
+/**
+ * este codigo se ejecuta cuando se carga la vista de preguntas
+ */
 app.get("/preguntas", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
@@ -536,15 +550,22 @@ app.get("/preguntas", middleware_acceso, function (request, response) {
     });
 });
 
+/**
+ * este codigo se ejecuta cuando se carga la vista de nueva pregunta
+ */
 app.get("/nuevaPregunta", middleware_acceso, function (request, response) {
     response.statusCode = 200;
     response.render("aniadePregunta");
 });
 
 
+/**
+ * este codigo se ejecuta cuando se va a crear una pregunta
+ */
 app.post("/nuevaPregunta", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
+    //se comprueba que el titulo no sea vacio
     if (request.body.la_pregunta == "") {
         response.setFlash("Titulo vacío");
         response.redirect("/nuevaPregunta");
@@ -566,7 +587,9 @@ app.post("/nuevaPregunta", middleware_acceso, function (request, response) {
 
 });
 
-
+/**
+ * este codigo se ejecuta cuando pinchamos sobre una pregunta
+ */
 app.get("/desarrollo_pregunta", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
@@ -598,6 +621,7 @@ app.get("/desarrollo_pregunta", middleware_acceso, function (request, response) 
 app.post("/responder", middleware_acceso, function (request, response) {
     response.statusCode = 200;
 
+    //esto indica que se ha elegido la respuesta especial
     if (request.body.respuestaID == -1) {
         if (request.body.respuesta_especial_texto == "") {
             response.setFlash("Elige una respuesta");
@@ -606,9 +630,10 @@ app.post("/responder", middleware_acceso, function (request, response) {
 
         } else {
 
+            //observamos que primero tenemos que añadir la respuesta a la base de datos
             daoPR.aniadir_respuesta_especial(request.body.respuesta_especial_texto, request.body.id_pregunta, function cb(insertedID) {
 
-                // console.log(insertedID);
+                //y una vez insertada, añadir la respuesta del usuario
 
                 daoPR.aniadirRespuestaUsuario(request.session.currentUserId, insertedID,
                     function (err) {
